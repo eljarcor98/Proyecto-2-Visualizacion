@@ -1,0 +1,327 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Tablero Bienestar WHR 2024</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Concepto: tablero de lectura rápida. Resumen arriba, filtros en una barra, cuatro gráficos y una tabla explorable. */
+:root{
+  --bg:#F3F6F8; --surface:#FFFFFF; --ink:#13222C; --muted:#5A6B76; --line:#D8E0E5; --soft:#E9EEF1;
+  --q1:#D95F02; --m:#A6BAA9; --q4:#1F78B4;
+  --c-gdp:#7B3294; --c-health:#1B9E77; --c-social:#C49A00; --c-freedom:#E3BC3E; --c-corr:#F2DC8C; --c-gen:#BDBDBD; --c-dys:#7F7F7F;
+  --font:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif; --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E171D; --surface:#16232B; --ink:#E7EEF2; --muted:#93A5B1; --line:#2A3A44; --soft:#1E2E37;
+  --q1:#F28A3A; --m:#6F8576; --q4:#4BA3E3;
+  --c-gdp:#B070CE; --c-health:#2FC99B; --c-social:#D9AE1C; --c-freedom:#EBC95A; --c-corr:#F2DC8C; --c-gen:#8E8E8E; --c-dys:#6A6A6A;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E171D; --surface:#16232B; --ink:#E7EEF2; --muted:#93A5B1; --line:#2A3A44; --soft:#1E2E37;
+  --q1:#F28A3A; --m:#6F8576; --q4:#4BA3E3;
+  --c-gdp:#B070CE; --c-health:#2FC99B; --c-social:#D9AE1C; --c-freedom:#EBC95A; --c-corr:#F2DC8C; --c-gen:#8E8E8E; --c-dys:#6A6A6A;
+  color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
+.wrap{max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+header h1{font-size:22px;font-weight:600;margin:0 0 4px;text-wrap:balance}
+header p{margin:0;color:var(--muted);max-width:75ch}
+.tabnum,.kpi b,td.n,th.n{font-variant-numeric:tabular-nums}
+.bar{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 14px}
+.bar label,.bar .lab{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:13px;padding:5px 10px;border-radius:999px;cursor:pointer}
+.chip i{width:10px;height:10px;border-radius:50%;background:var(--c)}
+.chip[aria-pressed="false"]{color:var(--muted)}
+.chip[aria-pressed="false"] i{background:transparent;box-shadow:inset 0 0 0 2px var(--c)}
+.chip[aria-pressed="true"]{border-color:var(--c)}
+select,input[type=search]{font:inherit;font-size:13px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 8px;min-width:0}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px;min-width:0}
+.kpi span{display:block;font-size:12px;color:var(--muted)}
+.kpi b{display:block;font-size:26px;font-weight:600;font-family:var(--mono);margin-top:2px}
+.kpi small{color:var(--muted);font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px;min-width:0;display:flex;flex-direction:column;gap:8px}
+.card h2{font-size:15px;font-weight:600;margin:0;text-wrap:balance}
+.card .sub{margin:0;color:var(--muted);font-size:12.5px}
+.chart{width:100%;min-width:0}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+svg text{fill:var(--muted);font-family:var(--font);font-size:11px}
+svg .lbl{fill:var(--ink)}
+svg .grid line{stroke:var(--soft)}
+svg .axis{stroke:var(--line)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:2px;background:var(--c)}
+.note{font-size:12px;color:var(--muted);margin:0}
+.wide{grid-column:1/-1}
+.tablewrap{max-height:380px;overflow:auto;border:1px solid var(--line);border-radius:6px}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:13px}
+th,td{padding:6px 10px;text-align:left;border-bottom:1px solid var(--soft);white-space:nowrap}
+th{position:sticky;top:0;background:var(--surface);font-weight:500;color:var(--muted);cursor:pointer;user-select:none;border-bottom:1px solid var(--line)}
+th.n,td.n{text-align:right;font-family:var(--mono)}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:var(--soft)}
+tbody tr.sel{background:var(--soft);box-shadow:inset 3px 0 0 var(--ink)}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;background:var(--c)}
+#tip{position:fixed;z-index:20;pointer-events:none;background:var(--ink);color:var(--bg);padding:7px 9px;border-radius:6px;font-size:12px;line-height:1.4;max-width:260px;opacity:0;transition:opacity .08s}
+#tip b{font-weight:600}
+.read{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.read div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.read h3{margin:0 0 4px;font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.read p{margin:0}
+@media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Bienestar entre países, World Happiness Report 2024</h1>
+    <p>¿En qué dimensiones difieren más los países con mayor y menor evaluación de vida? Q4 es el cuartil superior del Ladder score y Q1 el inferior, 36 países cada uno. Los componentes son contribuciones del modelo del informe, en puntos de la escalera: describen asociaciones, no causas.</p>
+  </header>
+
+  <section class="read" aria-label="Lectura rápida">
+    <div><h3>Mayor brecha individual</h3><p id="r1"></p></div>
+    <div><h3>Dimensión socioinstitucional</h3><p id="r2"></p></div>
+    <div><h3>Cautela</h3><p id="r3"></p></div>
+  </section>
+
+  <section class="bar" aria-label="Filtros">
+    <span class="lab">Grupos</span>
+    <div class="chips" id="chips"></div>
+    <label for="xvar">Eje X del gráfico 4</label>
+    <select id="xvar"></select>
+    <label for="unit">Unidad de la brecha (gráfico 2)</label>
+    <select id="unit"></select>
+    <label for="ci"><input type="checkbox" id="ci"> IC 95% (gráfico 4)</label>
+    <label for="q">Buscar país</label>
+    <input id="q" type="search" placeholder="Ej. Colombia" autocomplete="off">
+  </section>
+
+  <section class="kpis" id="kpis" aria-live="polite"></section>
+
+  <section class="grid">
+    <article class="card">
+      <h2>1. Distribución del Ladder score</h2>
+      <p class="sub">143 países. Las líneas marcan los cortes de Q1 y Q4.</p>
+      <div class="chart" id="c1"></div>
+    </article>
+    <article class="card">
+      <h2>2. Brecha entre Q4 y Q1 por componente</h2>
+      <p class="sub" id="s2"></p>
+      <div class="chart" id="c2"></div>
+    </article>
+    <article class="card">
+      <h2>3. De qué está hecho el puntaje promedio</h2>
+      <p class="sub">Los tramos suman el Ladder score promedio de cada grupo.</p>
+      <div class="chart" id="c3"></div>
+      <div class="legend" id="legend"></div>
+    </article>
+    <article class="card">
+      <h2 id="t4">4. Dimensión y bienestar, país por país</h2>
+      <p class="sub" id="s4"></p>
+      <div class="chart" id="c4"></div>
+      <p class="note" id="n4"></p>
+      <div class="note" id="out"></div>
+    </article>
+    <article class="card wide">
+      <h2>Países</h2>
+      <p class="sub">Clic en una fila para resaltarla en el gráfico 4. Clic en un encabezado para ordenar.</p>
+      <div class="tablewrap"><table id="tbl"></table></div>
+    </article>
+  </section>
+  <p class="note">Fuente: World Happiness Report 2024, Data for Figure 2.1 (promedio 2021-2023). Bahrain, Tajikistan y State of Palestine tienen Ladder score pero no contribuciones, por eso aparecen solo en el gráfico 1. Venezuela tiene contribución del PIB igual a 0 en el archivo. Lebanon tiene Distopía + residuo negativo. En «Baja corrupción percibida», un valor mayor indica menos corrupción percibida respecto de Distopía (no el nivel de corrupción). IC 95% = límites inferior y superior del Ladder score en el archivo.</p>
+</div>
+<div id="tip" role="status"></div>
+
+<script>
+const DATA = {"q1": 4.7257, "q3": 6.4158, "countries": [{"name": "Finland", "rank": 1, "ladder": 7.7407, "g": "Q4", "gdp": 1.8441, "health": 0.6948, "social": 1.5724, "freedom": 0.8593, "corr": 0.5462, "gen": 0.1417, "dys": 2.0824, "lo": 7.6666, "hi": 7.8148}, {"name": "Denmark", "rank": 2, "ladder": 7.5827, "g": "Q4", "gdp": 1.9078, "health": 0.6989, "social": 1.5204, "freedom": 0.8227, "corr": 0.5484, "gen": 0.2036, "dys": 1.8809, "lo": 7.5001, "hi": 7.6653}, {"name": "Iceland", "rank": 3, "ladder": 7.5251, "g": "Q4", "gdp": 1.8807, "health": 0.7183, "social": 1.6165, "freedom": 0.8185, "corr": 0.1825, "gen": 0.2583, "dys": 2.0502, "lo": 7.4327, "hi": 7.6175}, {"name": "Sweden", "rank": 4, "ladder": 7.3441, "g": "Q4", "gdp": 1.8781, "health": 0.7239, "social": 1.5008, "freedom": 0.8383, "corr": 0.5238, "gen": 0.2215, "dys": 1.6577, "lo": 7.2666, "hi": 7.4216}, {"name": "Israel", "rank": 5, "ladder": 7.3411, "g": "Q4", "gdp": 1.8029, "health": 0.7398, "social": 1.5128, "freedom": 0.6415, "corr": 0.1928, "gen": 0.1532, "dys": 2.298, "lo": 7.277, "hi": 7.4052}, {"name": "Netherlands", "rank": 6, "ladder": 7.3194, "g": "Q4", "gdp": 1.9007, "health": 0.7059, "social": 1.462, "freedom": 0.7251, "corr": 0.3724, "gen": 0.2474, "dys": 1.9059, "lo": 7.2562, "hi": 7.3826}, {"name": "Norway", "rank": 7, "ladder": 7.3017, "g": "Q4", "gdp": 1.952, "health": 0.7038, "social": 1.5165, "freedom": 0.8354, "corr": 0.4839, "gen": 0.2241, "dys": 1.5859, "lo": 7.2147, "hi": 7.3887}, {"name": "Luxembourg", "rank": 8, "ladder": 7.1219, "g": "Q4", "gdp": 2.1405, "health": 0.7076, "social": 1.3546, "freedom": 0.8012, "corr": 0.4324, "gen": 0.1457, "dys": 1.5398, "lo": 7.0311, "hi": 7.2127}, {"name": "Switzerland", "rank": 9, "ladder": 7.0602, "g": "Q4", "gdp": 1.9703, "health": 0.7467, "social": 1.4249, "freedom": 0.7592, "corr": 0.4976, "gen": 0.1733, "dys": 1.4881, "lo": 6.973, "hi": 7.1474}, {"name": "Australia", "rank": 10, "ladder": 7.0569, "g": "Q4", "gdp": 1.8543, "health": 0.692, "social": 1.4611, "freedom": 0.7563, "corr": 0.3234, "gen": 0.2252, "dys": 1.7447, "lo": 6.9731, "hi": 7.1407}, {"name": "New Zealand", "rank": 11, "ladder": 7.0292, "g": "Q4", "gdp": 1.8103, "health": 0.6726, "social": 1.5269, "freedom": 0.7455, "corr": 0.4802, "gen": 0.2261, "dys": 1.5675, "lo": 6.9539, "hi": 7.1045}, {"name": "Costa Rica", "rank": 12, "ladder": 6.9554, "g": "Q4", "gdp": 1.5606, "health": 0.6608, "social": 1.373, "freedom": 0.7965, "corr": 0.1229, "gen": 0.1085, "dys": 2.333, "lo": 6.8599, "hi": 7.0509}, {"name": "Kuwait", "rank": 13, "ladder": 6.9514, "g": "Q4", "gdp": 1.8451, "health": 0.6612, "social": 1.3637, "freedom": 0.8266, "corr": 0.1717, "gen": 0.1995, "dys": 1.8838, "lo": 6.843, "hi": 7.0598}, {"name": "Austria", "rank": 14, "ladder": 6.9047, "g": "Q4", "gdp": 1.8853, "health": 0.6962, "social": 1.3364, "freedom": 0.7027, "corr": 0.3046, "gen": 0.2139, "dys": 1.7657, "lo": 6.8238, "hi": 6.9856}, {"name": "Canada", "rank": 15, "ladder": 6.8996, "g": "Q4", "gdp": 1.8397, "health": 0.701, "social": 1.4586, "freedom": 0.7301, "corr": 0.3682, "gen": 0.2302, "dys": 1.5717, "lo": 6.8154, "hi": 6.9838}, {"name": "Belgium", "rank": 16, "ladder": 6.8942, "g": "Q4", "gdp": 1.868, "health": 0.6899, "social": 1.4404, "freedom": 0.7288, "corr": 0.3108, "gen": 0.1705, "dys": 1.6858, "lo": 6.8273, "hi": 6.9611}, {"name": "Ireland", "rank": 17, "ladder": 6.838, "g": "Q4", "gdp": 2.1288, "health": 0.6996, "social": 1.3899, "freedom": 0.7576, "corr": 0.4181, "gen": 0.2052, "dys": 1.2387, "lo": 6.7487, "hi": 6.9273}, {"name": "Czechia", "rank": 18, "ladder": 6.8218, "g": "Q4", "gdp": 1.7832, "health": 0.638, "social": 1.511, "freedom": 0.7865, "corr": 0.0679, "gen": 0.1768, "dys": 1.8584, "lo": 6.7407, "hi": 6.9029}, {"name": "Lithuania", "rank": 19, "ladder": 6.8175, "g": "Q4", "gdp": 1.7657, "health": 0.5984, "social": 1.4536, "freedom": 0.5327, "corr": 0.1158, "gen": 0.0438, "dys": 2.3074, "lo": 6.7389, "hi": 6.8961}, {"name": "United Kingdom", "rank": 20, "ladder": 6.749, "g": "Q4", "gdp": 1.8222, "health": 0.6719, "social": 1.3261, "freedom": 0.7131, "corr": 0.3513, "gen": 0.2666, "dys": 1.5977, "lo": 6.6648, "hi": 6.8332}, {"name": "Slovenia", "rank": 21, "ladder": 6.7433, "g": "Q4", "gdp": 1.7856, "health": 0.6948, "social": 1.5022, "freedom": 0.7895, "corr": 0.1306, "gen": 0.1575, "dys": 1.6831, "lo": 6.6433, "hi": 6.8433}, {"name": "United Arab Emirates", "rank": 22, "ladder": 6.7331, "g": "Q4", "gdp": 1.9831, "health": 0.5626, "social": 1.1639, "freedom": 0.815, "corr": 0.2583, "gen": 0.2089, "dys": 1.7412, "lo": 6.6429, "hi": 6.8233}, {"name": "United States", "rank": 23, "ladder": 6.7248, "g": "Q4", "gdp": 1.9389, "health": 0.5424, "social": 1.3917, "freedom": 0.5864, "corr": 0.1692, "gen": 0.2233, "dys": 1.8731, "lo": 6.6312, "hi": 6.8184}, {"name": "Germany", "rank": 24, "ladder": 6.7185, "g": "Q4", "gdp": 1.8713, "health": 0.7024, "social": 1.3897, "freedom": 0.6998, "corr": 0.3678, "gen": 0.1742, "dys": 1.5132, "lo": 6.6225, "hi": 6.8145}, {"name": "Mexico", "rank": 25, "ladder": 6.678, "g": "Q4", "gdp": 1.5207, "health": 0.5445, "social": 1.2412, "freedom": 0.7221, "corr": 0.1266, "gen": 0.0859, "dys": 2.4369, "lo": 6.5749, "hi": 6.7811}, {"name": "Uruguay", "rank": 26, "ladder": 6.6115, "g": "Q4", "gdp": 1.5956, "health": 0.5916, "social": 1.4314, "freedom": 0.7752, "corr": 0.2205, "gen": 0.1061, "dys": 1.8912, "lo": 6.5272, "hi": 6.6958}, {"name": "France", "rank": 27, "ladder": 6.609, "g": "Q4", "gdp": 1.8183, "health": 0.7273, "social": 1.3481, "freedom": 0.6498, "corr": 0.2809, "gen": 0.1123, "dys": 1.6722, "lo": 6.533, "hi": 6.685}, {"name": "Saudi Arabia", "rank": 28, "ladder": 6.5935, "g": "Q4", "gdp": 1.8424, "health": 0.5112, "social": 1.3606, "freedom": 0.7871, "corr": 0.188, "gen": 0.1139, "dys": 1.7903, "lo": 6.4805, "hi": 6.7065}, {"name": "Kosovo", "rank": 29, "ladder": 6.561, "g": "Q4", "gdp": 1.3642, "health": 0.5991, "social": 1.2768, "freedom": 0.7393, "corr": 0.0726, "gen": 0.2538, "dys": 2.255, "lo": 6.4551, "hi": 6.6669}, {"name": "Singapore", "rank": 30, "ladder": 6.5228, "g": "Q4", "gdp": 2.1181, "health": 0.7689, "social": 1.3612, "freedom": 0.7429, "corr": 0.5751, "gen": 0.1683, "dys": 0.7882, "lo": 6.4403, "hi": 6.6053}, {"name": "Taiwan Province of China", "rank": 31, "ladder": 6.5035, "g": "Q4", "gdp": 1.8416, "health": 0.6498, "social": 1.3459, "freedom": 0.649, "corr": 0.2023, "gen": 0.0683, "dys": 1.7466, "lo": 6.4097, "hi": 6.5973}, {"name": "Romania", "rank": 32, "ladder": 6.4912, "g": "Q4", "gdp": 1.699, "health": 0.5826, "social": 1.2357, "freedom": 0.7166, "corr": 0.0063, "gen": 0.0407, "dys": 2.2102, "lo": 6.3904, "hi": 6.592}, {"name": "El Salvador", "rank": 33, "ladder": 6.4687, "g": "Q4", "gdp": 1.2651, "health": 0.5487, "social": 1.0798, "freedom": 0.816, "corr": 0.2527, "gen": 0.0825, "dys": 2.4239, "lo": 6.3383, "hi": 6.5991}, {"name": "Estonia", "rank": 34, "ladder": 6.4477, "g": "Q4", "gdp": 1.7518, "health": 0.6573, "social": 1.5271, "freedom": 0.8054, "corr": 0.4015, "gen": 0.1665, "dys": 1.138, "lo": 6.3714, "hi": 6.524}, {"name": "Poland", "rank": 35, "ladder": 6.4415, "g": "Q4", "gdp": 1.7377, "health": 0.6394, "social": 1.4174, "freedom": 0.6, "corr": 0.1753, "gen": 0.0805, "dys": 1.7912, "lo": 6.3699, "hi": 6.5131}, {"name": "Spain", "rank": 36, "ladder": 6.4209, "g": "Q4", "gdp": 1.7662, "health": 0.7294, "social": 1.4706, "freedom": 0.619, "corr": 0.1772, "gen": 0.1188, "dys": 1.5397, "lo": 6.3393, "hi": 6.5025}, {"name": "Serbia", "rank": 37, "ladder": 6.4108, "g": "M", "gdp": 1.5378, "health": 0.5853, "social": 1.3915, "freedom": 0.6632, "corr": 0.1006, "gen": 0.2001, "dys": 1.9321, "lo": 6.3, "hi": 6.5216}, {"name": "Chile", "rank": 38, "ladder": 6.3603, "g": "M", "gdp": 1.6164, "health": 0.6733, "social": 1.369, "freedom": 0.6508, "corr": 0.0755, "gen": 0.117, "dys": 1.8582, "lo": 6.273, "hi": 6.4476}, {"name": "Panama", "rank": 39, "ladder": 6.3582, "g": "M", "gdp": 1.7017, "health": 0.6332, "social": 1.392, "freedom": 0.7199, "corr": 0.0425, "gen": 0.0627, "dys": 1.8062, "lo": 6.2272, "hi": 6.4892}, {"name": "Malta", "rank": 40, "ladder": 6.3458, "g": "M", "gdp": 1.8269, "health": 0.7066, "social": 1.4436, "freedom": 0.727, "corr": 0.1247, "gen": 0.25, "dys": 1.267, "lo": 6.2614, "hi": 6.4302}, {"name": "Italy", "rank": 41, "ladder": 6.3235, "g": "M", "gdp": 1.8002, "health": 0.7197, "social": 1.3282, "freedom": 0.513, "corr": 0.0736, "gen": 0.1121, "dys": 1.7768, "lo": 6.211, "hi": 6.436}, {"name": "Guatemala", "rank": 42, "ladder": 6.287, "g": "M", "gdp": 1.2595, "health": 0.4669, "social": 1.1689, "freedom": 0.7353, "corr": 0.0778, "gen": 0.1053, "dys": 2.4733, "lo": 6.117, "hi": 6.457}, {"name": "Nicaragua", "rank": 43, "ladder": 6.2839, "g": "M", "gdp": 1.0973, "health": 0.5424, "social": 1.2632, "freedom": 0.7934, "corr": 0.251, "gen": 0.1331, "dys": 2.2035, "lo": 6.1346, "hi": 6.4332}, {"name": "Brazil", "rank": 44, "ladder": 6.272, "g": "M", "gdp": 1.4295, "health": 0.5479, "social": 1.2688, "freedom": 0.6852, "corr": 0.1425, "gen": 0.13, "dys": 2.0681, "lo": 6.1536, "hi": 6.3904}, {"name": "Slovakia", "rank": 45, "ladder": 6.2571, "g": "M", "gdp": 1.7055, "health": 0.638, "social": 1.5403, "freedom": 0.5664, "corr": 0.0579, "gen": 0.096, "dys": 1.653, "lo": 6.182, "hi": 6.3322}, {"name": "Latvia", "rank": 46, "ladder": 6.2345, "g": "M", "gdp": 1.7003, "health": 0.5638, "social": 1.5085, "freedom": 0.6663, "corr": 0.0784, "gen": 0.1272, "dys": 1.59, "lo": 6.1546, "hi": 6.3144}, {"name": "Uzbekistan", "rank": 47, "ladder": 6.195, "g": "M", "gdp": 1.2117, "health": 0.5389, "social": 1.3945, "freedom": 0.835, "corr": 0.2147, "gen": 0.2515, "dys": 1.7488, "lo": 6.0868, "hi": 6.3032}, {"name": "Argentina", "rank": 48, "ladder": 6.1881, "g": "M", "gdp": 1.5617, "health": 0.5847, "social": 1.3813, "freedom": 0.6807, "corr": 0.0805, "gen": 0.0875, "dys": 1.8117, "lo": 6.0705, "hi": 6.3057}, {"name": "Kazakhstan", "rank": 49, "ladder": 6.1875, "g": "M", "gdp": 1.6225, "health": 0.5556, "social": 1.4566, "freedom": 0.7326, "corr": 0.1198, "gen": 0.1491, "dys": 1.5514, "lo": 6.0966, "hi": 6.2784}, {"name": "Cyprus", "rank": 50, "ladder": 6.0681, "g": "M", "gdp": 1.7938, "health": 0.744, "social": 1.217, "freedom": 0.5288, "corr": 0.0492, "gen": 0.1245, "dys": 1.6109, "lo": 5.9542, "hi": 6.182}, {"name": "Japan", "rank": 51, "ladder": 6.0598, "g": "M", "gdp": 1.7857, "health": 0.7848, "social": 1.3544, "freedom": 0.6315, "corr": 0.2194, "gen": 0.0228, "dys": 1.2612, "lo": 5.9758, "hi": 6.1438}, {"name": "South Korea", "rank": 52, "ladder": 6.0579, "g": "M", "gdp": 1.815, "health": 0.7696, "social": 1.178, "freedom": 0.5547, "corr": 0.1579, "gen": 0.1263, "dys": 1.4563, "lo": 5.9682, "hi": 6.1476}, {"name": "Philippines", "rank": 53, "ladder": 6.0476, "g": "M", "gdp": 1.2319, "health": 0.4413, "social": 1.146, "freedom": 0.8263, "corr": 0.136, "gen": 0.0987, "dys": 2.1675, "lo": 5.9289, "hi": 6.1663}, {"name": "Vietnam", "rank": 54, "ladder": 6.043, "g": "M", "gdp": 1.3305, "health": 0.5389, "social": 1.267, "freedom": 0.8426, "corr": 0.16, "gen": 0.0937, "dys": 1.8103, "lo": 5.9478, "hi": 6.1382}, {"name": "Portugal", "rank": 55, "ladder": 6.0296, "g": "M", "gdp": 1.7276, "health": 0.699, "social": 1.3677, "freedom": 0.7567, "corr": 0.0353, "gen": 0.0467, "dys": 1.3967, "lo": 5.925, "hi": 6.1342}, {"name": "Hungary", "rank": 56, "ladder": 6.0169, "g": "M", "gdp": 1.7221, "health": 0.5957, "social": 1.5282, "freedom": 0.5809, "corr": 0.0671, "gen": 0.1227, "dys": 1.4002, "lo": 5.9099, "hi": 6.1239}, {"name": "Paraguay", "rank": 57, "ladder": 5.9765, "g": "M", "gdp": 1.3981, "health": 0.5486, "social": 1.408, "freedom": 0.7876, "corr": 0.0653, "gen": 0.1314, "dys": 1.6374, "lo": 5.8683, "hi": 6.0847}, {"name": "Thailand", "rank": 58, "ladder": 5.9761, "g": "M", "gdp": 1.4842, "health": 0.62, "social": 1.3467, "freedom": 0.7557, "corr": 0.0242, "gen": 0.2826, "dys": 1.4627, "lo": 5.8579, "hi": 6.0943}, {"name": "Malaysia", "rank": 59, "ladder": 5.9752, "g": "M", "gdp": 1.6459, "health": 0.5396, "social": 1.1435, "freedom": 0.8285, "corr": 0.119, "gen": 0.226, "dys": 1.4727, "lo": 5.8724, "hi": 6.078}, {"name": "China", "rank": 60, "ladder": 5.9727, "g": "M", "gdp": 1.4968, "health": 0.6289, "social": 1.2387, "freedom": 0.7044, "corr": 0.1635, "gen": 0.1318, "dys": 1.6085, "lo": 5.8849, "hi": 6.0605}, {"name": "Honduras", "rank": 61, "ladder": 5.9684, "g": "M", "gdp": 1.0907, "health": 0.5022, "social": 1.0355, "freedom": 0.7199, "corr": 0.0808, "gen": 0.1753, "dys": 2.364, "lo": 5.8224, "hi": 6.1144}, {"name": "Bahrain", "rank": 62, "ladder": 5.9591, "g": "M", "gdp": null, "health": null, "social": null, "freedom": null, "corr": null, "gen": null, "dys": null, "lo": 5.7657, "hi": 6.1525}, {"name": "Croatia", "rank": 63, "ladder": 5.9423, "g": "M", "gdp": 1.7101, "health": 0.6366, "social": 1.4448, "freedom": 0.4692, "corr": 0.0429, "gen": 0.0643, "dys": 1.5745, "lo": 5.8375, "hi": 6.0471}, {"name": "Greece", "rank": 64, "ladder": 5.9336, "g": "M", "gdp": 1.6839, "health": 0.6962, "social": 1.2761, "freedom": 0.3372, "corr": 0.0926, "gen": 0.0182, "dys": 1.8295, "lo": 5.8403, "hi": 6.0269}, {"name": "Bosnia and Herzegovina", "rank": 65, "ladder": 5.877, "g": "M", "gdp": 1.4647, "health": 0.5874, "social": 1.3181, "freedom": 0.6206, "corr": 0.0, "gen": 0.2464, "dys": 1.6397, "lo": 5.7746, "hi": 5.9794}, {"name": "Libya", "rank": 66, "ladder": 5.8663, "g": "M", "gdp": 1.5257, "health": 0.5497, "social": 1.1, "freedom": 0.5917, "corr": 0.2036, "gen": 0.1111, "dys": 1.7845, "lo": 5.7458, "hi": 5.9868}, {"name": "Jamaica", "rank": 67, "ladder": 5.8417, "g": "M", "gdp": 1.2802, "health": 0.5666, "social": 1.3238, "freedom": 0.6469, "corr": 0.0281, "gen": 0.0892, "dys": 1.9069, "lo": 5.6239, "hi": 6.0595}, {"name": "Peru", "rank": 68, "ladder": 5.8409, "g": "M", "gdp": 1.3706, "health": 0.6615, "social": 1.18, "freedom": 0.6148, "corr": 0.0287, "gen": 0.0782, "dys": 1.9071, "lo": 5.7363, "hi": 5.9455}, {"name": "Dominican Republic", "rank": 69, "ladder": 5.8228, "g": "M", "gdp": 1.5167, "health": 0.5112, "social": 1.2715, "freedom": 0.7299, "corr": 0.1956, "gen": 0.0863, "dys": 1.5115, "lo": 5.6786, "hi": 5.967}, {"name": "Mauritius", "rank": 70, "ladder": 5.8164, "g": "M", "gdp": 1.5704, "health": 0.4897, "social": 1.3578, "freedom": 0.6408, "corr": 0.1178, "gen": 0.1228, "dys": 1.5171, "lo": 5.7062, "hi": 5.9266}, {"name": "Moldova", "rank": 71, "ladder": 5.8159, "g": "M", "gdp": 1.3854, "health": 0.5417, "social": 1.2772, "freedom": 0.6949, "corr": 0.0445, "gen": 0.0774, "dys": 1.7949, "lo": 5.7021, "hi": 5.9297}, {"name": "Russia", "rank": 72, "ladder": 5.7853, "g": "M", "gdp": 1.6422, "health": 0.5314, "social": 1.3512, "freedom": 0.5515, "corr": 0.1205, "gen": 0.1378, "dys": 1.4507, "lo": 5.7117, "hi": 5.8589}, {"name": "Bolivia", "rank": 73, "ladder": 5.7843, "g": "M", "gdp": 1.2171, "health": 0.4876, "social": 1.1794, "freedom": 0.7195, "corr": 0.0608, "gen": 0.0996, "dys": 2.0203, "lo": 5.6741, "hi": 5.8945}, {"name": "Ecuador", "rank": 74, "ladder": 5.7245, "g": "M", "gdp": 1.3155, "health": 0.6401, "social": 1.1507, "freedom": 0.6061, "corr": 0.0783, "gen": 0.0874, "dys": 1.8465, "lo": 5.5994, "hi": 5.8496}, {"name": "Kyrgyzstan", "rank": 75, "ladder": 5.7135, "g": "M", "gdp": 1.0543, "health": 0.5881, "social": 1.4769, "freedom": 0.8343, "corr": 0.0299, "gen": 0.2252, "dys": 1.5048, "lo": 5.632, "hi": 5.795}, {"name": "Montenegro", "rank": 76, "ladder": 5.707, "g": "M", "gdp": 1.5705, "health": 0.5874, "social": 1.318, "freedom": 0.6317, "corr": 0.1322, "gen": 0.1104, "dys": 1.3568, "lo": 5.5988, "hi": 5.8152}, {"name": "Mongolia", "rank": 77, "ladder": 5.6962, "g": "M", "gdp": 1.3527, "health": 0.4004, "social": 1.5106, "freedom": 0.5008, "corr": 0.0553, "gen": 0.2368, "dys": 1.6396, "lo": 5.6098, "hi": 5.7826}, {"name": "Colombia", "rank": 78, "ladder": 5.6951, "g": "M", "gdp": 1.4369, "health": 0.6477, "social": 1.2407, "freedom": 0.6439, "corr": 0.0586, "gen": 0.0716, "dys": 1.5957, "lo": 5.5843, "hi": 5.8059}, {"name": "Venezuela", "rank": 79, "ladder": 5.6067, "g": "M", "gdp": 0.0, "health": 0.4911, "social": 1.3214, "freedom": 0.5179, "corr": 0.0862, "gen": 0.1923, "dys": 2.9979, "lo": 5.4888, "hi": 5.7246}, {"name": "Indonesia", "rank": 80, "ladder": 5.5683, "g": "M", "gdp": 1.3615, "health": 0.4717, "social": 1.1843, "freedom": 0.7794, "corr": 0.0547, "gen": 0.3992, "dys": 1.3175, "lo": 5.4663, "hi": 5.6703}, {"name": "Bulgaria", "rank": 81, "ladder": 5.4627, "g": "M", "gdp": 1.6294, "health": 0.5666, "social": 1.4688, "freedom": 0.6204, "corr": 0.0062, "gen": 0.0833, "dys": 1.0881, "lo": 5.3566, "hi": 5.5688}, {"name": "Armenia", "rank": 82, "ladder": 5.4549, "g": "M", "gdp": 1.4436, "health": 0.6034, "social": 1.1544, "freedom": 0.6502, "corr": 0.1731, "gen": 0.0514, "dys": 1.3788, "lo": 5.35, "hi": 5.5598}, {"name": "South Africa", "rank": 83, "ladder": 5.422, "g": "M", "gdp": 1.3891, "health": 0.3219, "social": 1.3693, "freedom": 0.5366, "corr": 0.034, "gen": 0.0784, "dys": 1.6927, "lo": 5.2954, "hi": 5.5486}, {"name": "North Macedonia", "rank": 84, "ladder": 5.3691, "g": "M", "gdp": 1.4753, "health": 0.5694, "social": 1.2766, "freedom": 0.5797, "corr": 0.0146, "gen": 0.1938, "dys": 1.2597, "lo": 5.27, "hi": 5.4682}, {"name": "Algeria", "rank": 85, "ladder": 5.3635, "g": "M", "gdp": 1.3235, "health": 0.5679, "social": 1.1906, "freedom": 0.247, "corr": 0.2, "gen": 0.0913, "dys": 1.7431, "lo": 5.2513, "hi": 5.4757}, {"name": "Hong Kong S.A.R. of China", "rank": 86, "ladder": 5.3164, "g": "M", "gdp": 1.9087, "health": 0.8573, "social": 1.1845, "freedom": 0.4847, "corr": 0.4016, "gen": 0.1468, "dys": 0.3328, "lo": 5.2294, "hi": 5.4034}, {"name": "Albania", "rank": 87, "ladder": 5.3042, "g": "M", "gdp": 1.4379, "health": 0.638, "social": 0.9236, "freedom": 0.6897, "corr": 0.049, "gen": 0.1379, "dys": 1.4282, "lo": 5.1683, "hi": 5.4401}, {"name": "Tajikistan", "rank": 88, "ladder": 5.2807, "g": "M", "gdp": null, "health": null, "social": null, "freedom": null, "corr": null, "gen": null, "dys": null, "lo": 5.2008, "hi": 5.3606}, {"name": "Congo (Brazzaville)", "rank": 89, "ladder": 5.2215, "g": "M", "gdp": 0.8923, "health": 0.3056, "social": 0.6219, "freedom": 0.5227, "corr": 0.1377, "gen": 0.1238, "dys": 2.6175, "lo": 5.0471, "hi": 5.3959}, {"name": "Mozambique", "rank": 90, "ladder": 5.2164, "g": "M", "gdp": 0.5598, "health": 0.1556, "social": 0.8831, "freedom": 0.7281, "corr": 0.1962, "gen": 0.1577, "dys": 2.5361, "lo": 5.027, "hi": 5.4058}, {"name": "Georgia", "rank": 91, "ladder": 5.1847, "g": "M", "gdp": 1.4669, "health": 0.5244, "social": 0.99, "freedom": 0.6798, "corr": 0.1743, "gen": 0.0, "dys": 1.3492, "lo": 5.0865, "hi": 5.2829}, {"name": "Iraq", "rank": 92, "ladder": 5.166, "g": "M", "gdp": 1.2487, "health": 0.4982, "social": 0.9959, "freedom": 0.4245, "corr": 0.0478, "gen": 0.1413, "dys": 1.8095, "lo": 5.0491, "hi": 5.2829}, {"name": "Nepal", "rank": 93, "ladder": 5.1584, "g": "M", "gdp": 0.9654, "health": 0.4426, "social": 0.9902, "freedom": 0.6529, "corr": 0.1149, "gen": 0.2094, "dys": 1.783, "lo": 5.0266, "hi": 5.2902}, {"name": "Laos", "rank": 94, "ladder": 5.1389, "g": "M", "gdp": 1.2085, "health": 0.4229, "social": 0.8463, "freedom": 0.7965, "corr": 0.1665, "gen": 0.1695, "dys": 1.5286, "lo": 5.0171, "hi": 5.2607}, {"name": "Gabon", "rank": 95, "ladder": 5.1063, "g": "M", "gdp": 1.4034, "health": 0.3443, "social": 1.0376, "freedom": 0.5158, "corr": 0.0999, "gen": 0.0453, "dys": 1.66, "lo": 4.9694, "hi": 5.2432}, {"name": "Ivory Coast", "rank": 96, "ladder": 5.0801, "g": "M", "gdp": 1.0801, "health": 0.2876, "social": 0.5776, "freedom": 0.547, "corr": 0.1641, "gen": 0.1205, "dys": 2.3032, "lo": 4.9364, "hi": 5.2238}, {"name": "Guinea", "rank": 97, "ladder": 5.0233, "g": "M", "gdp": 0.8306, "health": 0.2355, "social": 0.6216, "freedom": 0.5213, "corr": 0.1074, "gen": 0.2101, "dys": 2.4967, "lo": 4.881, "hi": 5.1656}, {"name": "Turkiye", "rank": 98, "ladder": 4.9753, "g": "M", "gdp": 1.7016, "health": 0.6311, "social": 1.175, "freedom": 0.2021, "corr": 0.1148, "gen": 0.0681, "dys": 1.0828, "lo": 4.8658, "hi": 5.0848}, {"name": "Senegal", "rank": 99, "ladder": 4.9686, "g": "M", "gdp": 0.9274, "health": 0.3921, "social": 0.7507, "freedom": 0.6068, "corr": 0.0687, "gen": 0.152, "dys": 2.0709, "lo": 4.8412, "hi": 5.096}, {"name": "Iran", "rank": 100, "ladder": 4.9228, "g": "M", "gdp": 1.4352, "health": 0.5708, "social": 1.1362, "freedom": 0.3655, "corr": 0.1234, "gen": 0.235, "dys": 1.0566, "lo": 4.8216, "hi": 5.024}, {"name": "Azerbaijan", "rank": 101, "ladder": 4.8934, "g": "M", "gdp": 1.4329, "health": 0.4956, "social": 0.8757, "freedom": 0.6682, "corr": 0.1992, "gen": 0.1116, "dys": 1.1102, "lo": 4.7684, "hi": 5.0184}, {"name": "Nigeria", "rank": 102, "ladder": 4.8808, "g": "M", "gdp": 1.0418, "health": 0.2556, "social": 1.0755, "freedom": 0.5658, "corr": 0.019, "gen": 0.2014, "dys": 1.7218, "lo": 4.7438, "hi": 5.0178}, {"name": "State of Palestine", "rank": 103, "ladder": 4.8795, "g": "M", "gdp": null, "health": null, "social": null, "freedom": null, "corr": null, "gen": null, "dys": null, "lo": 4.7531, "hi": 5.0059}, {"name": "Cameroon", "rank": 104, "ladder": 4.8744, "g": "M", "gdp": 0.9432, "health": 0.2876, "social": 0.856, "freedom": 0.5212, "corr": 0.0603, "gen": 0.1263, "dys": 2.0797, "lo": 4.7529, "hi": 4.996}, {"name": "Ukraine", "rank": 105, "ladder": 4.873, "g": "M", "gdp": 1.3499, "health": 0.5133, "social": 1.3153, "freedom": 0.6306, "corr": 0.0254, "gen": 0.2854, "dys": 0.753, "lo": 4.7577, "hi": 4.9883}, {"name": "Namibia", "rank": 106, "ladder": 4.8317, "g": "M", "gdp": 1.2663, "health": 0.3069, "social": 1.212, "freedom": 0.4697, "corr": 0.0615, "gen": 0.0687, "dys": 1.4465, "lo": 4.7055, "hi": 4.9579}, {"name": "Morocco", "rank": 107, "ladder": 4.7947, "g": "M", "gdp": 1.2134, "health": 0.4946, "social": 0.4711, "freedom": 0.6311, "corr": 0.0818, "gen": 0.0421, "dys": 1.8605, "lo": 4.677, "hi": 4.9124}, {"name": "Pakistan", "rank": 108, "ladder": 4.6567, "g": "Q1", "gdp": 1.0685, "health": 0.3207, "social": 0.6004, "freedom": 0.5419, "corr": 0.074, "gen": 0.1444, "dys": 1.9067, "lo": 4.5347, "hi": 4.7787}, {"name": "Niger", "rank": 109, "ladder": 4.5563, "g": "Q1", "gdp": 0.5728, "health": 0.2931, "social": 0.6774, "freedom": 0.6145, "corr": 0.1468, "gen": 0.145, "dys": 2.1066, "lo": 4.4006, "hi": 4.712}, {"name": "Burkina Faso", "rank": 110, "ladder": 4.548, "g": "Q1", "gdp": 0.7558, "health": 0.2737, "social": 0.6851, "freedom": 0.4829, "corr": 0.1787, "gen": 0.1732, "dys": 1.9986, "lo": 4.4098, "hi": 4.6862}, {"name": "Mauritania", "rank": 111, "ladder": 4.5051, "g": "Q1", "gdp": 1.0777, "health": 0.4001, "social": 0.7046, "freedom": 0.3426, "corr": 0.1985, "gen": 0.1325, "dys": 1.6491, "lo": 4.3373, "hi": 4.6729}, {"name": "Gambia", "rank": 112, "ladder": 4.4849, "g": "Q1", "gdp": 0.7503, "health": 0.3297, "social": 0.6838, "freedom": 0.4586, "corr": 0.0478, "gen": 0.3243, "dys": 1.8903, "lo": 4.3444, "hi": 4.6254}, {"name": "Chad", "rank": 113, "ladder": 4.4713, "g": "Q1", "gdp": 0.6033, "health": 0.1985, "social": 0.8054, "freedom": 0.4111, "corr": 0.1127, "gen": 0.2185, "dys": 2.1217, "lo": 4.3126, "hi": 4.63}, {"name": "Kenya", "rank": 114, "ladder": 4.4696, "g": "Q1", "gdp": 1.0367, "health": 0.3533, "social": 0.8954, "freedom": 0.5186, "corr": 0.0686, "gen": 0.2815, "dys": 1.3155, "lo": 4.3439, "hi": 4.5953}, {"name": "Tunisia", "rank": 115, "ladder": 4.4218, "g": "Q1", "gdp": 1.3064, "health": 0.5791, "social": 0.9547, "freedom": 0.2539, "corr": 0.0184, "gen": 0.0239, "dys": 1.2853, "lo": 4.3383, "hi": 4.5053}, {"name": "Benin", "rank": 116, "ladder": 4.3774, "g": "Q1", "gdp": 0.9136, "health": 0.284, "social": 0.1283, "freedom": 0.5668, "corr": 0.2521, "gen": 0.1121, "dys": 2.1205, "lo": 4.245, "hi": 4.5098}, {"name": "Uganda", "rank": 117, "ladder": 4.3717, "g": "Q1", "gdp": 0.772, "health": 0.3734, "social": 1.1508, "freedom": 0.5874, "corr": 0.0542, "gen": 0.1778, "dys": 1.2562, "lo": 4.2428, "hi": 4.5006}, {"name": "Myanmar", "rank": 118, "ladder": 4.3545, "g": "Q1", "gdp": 0.9776, "health": 0.4357, "social": 0.9881, "freedom": 0.4504, "corr": 0.1741, "gen": 0.4008, "dys": 0.9278, "lo": 4.2079, "hi": 4.5011}, {"name": "Cambodia", "rank": 119, "ladder": 4.3407, "g": "Q1", "gdp": 1.011, "health": 0.442, "social": 1.0185, "freedom": 0.8633, "corr": 0.071, "gen": 0.1699, "dys": 0.7649, "lo": 4.2355, "hi": 4.4459}, {"name": "Ghana", "rank": 120, "ladder": 4.2894, "g": "Q1", "gdp": 1.0765, "health": 0.3595, "social": 0.7471, "freedom": 0.6232, "corr": 0.0277, "gen": 0.1827, "dys": 1.2726, "lo": 4.1824, "hi": 4.3964}, {"name": "Liberia", "rank": 121, "ladder": 4.2686, "g": "Q1", "gdp": 0.6188, "health": 0.3007, "social": 0.6733, "freedom": 0.5458, "corr": 0.0745, "gen": 0.1778, "dys": 1.8777, "lo": 4.0629, "hi": 4.4743}, {"name": "Mali", "rank": 122, "ladder": 4.232, "g": "Q1", "gdp": 0.7474, "health": 0.2675, "social": 0.6879, "freedom": 0.5857, "corr": 0.0896, "gen": 0.1204, "dys": 1.7336, "lo": 4.1166, "hi": 4.3474}, {"name": "Madagascar", "rank": 123, "ladder": 4.2279, "g": "Q1", "gdp": 0.6279, "health": 0.3332, "social": 0.8235, "freedom": 0.2505, "corr": 0.1232, "gen": 0.1724, "dys": 1.8972, "lo": 4.0972, "hi": 4.3586}, {"name": "Togo", "rank": 124, "ladder": 4.2141, "g": "Q1", "gdp": 0.7585, "health": 0.3201, "social": 0.5861, "freedom": 0.4526, "corr": 0.156, "gen": 0.1267, "dys": 1.8141, "lo": 4.0979, "hi": 4.3303}, {"name": "Jordan", "rank": 125, "ladder": 4.1858, "g": "Q1", "gdp": 1.2623, "health": 0.5943, "social": 0.983, "freedom": 0.5932, "corr": 0.1895, "gen": 0.0593, "dys": 0.5042, "lo": 4.0657, "hi": 4.3059}, {"name": "India", "rank": 126, "ladder": 4.0541, "g": "Q1", "gdp": 1.1662, "health": 0.417, "social": 0.6527, "freedom": 0.7666, "corr": 0.122, "gen": 0.1739, "dys": 0.7557, "lo": 3.9852, "hi": 4.123}, {"name": "Egypt", "rank": 127, "ladder": 3.9766, "g": "Q1", "gdp": 1.37, "health": 0.4877, "social": 0.9959, "freedom": 0.4897, "corr": 0.2592, "gen": 0.0254, "dys": 0.3488, "lo": 3.8871, "hi": 4.0661}, {"name": "Sri Lanka", "rank": 128, "ladder": 3.8981, "g": "Q1", "gdp": 1.361, "health": 0.586, "social": 1.1787, "freedom": 0.5831, "corr": 0.0308, "gen": 0.1441, "dys": 0.0145, "lo": 3.7785, "hi": 4.0177}, {"name": "Bangladesh", "rank": 129, "ladder": 3.8859, "g": "Q1", "gdp": 1.1216, "health": 0.5133, "social": 0.2492, "freedom": 0.7749, "corr": 0.1674, "gen": 0.1404, "dys": 0.9192, "lo": 3.7777, "hi": 3.9941}, {"name": "Ethiopia", "rank": 130, "ladder": 3.8609, "g": "Q1", "gdp": 0.7916, "health": 0.4198, "social": 0.9149, "freedom": 0.4409, "corr": 0.1007, "gen": 0.2703, "dys": 0.9228, "lo": 3.7252, "hi": 3.9966}, {"name": "Tanzania", "rank": 131, "ladder": 3.7806, "g": "Q1", "gdp": 0.8201, "health": 0.3797, "social": 0.706, "freedom": 0.7093, "corr": 0.2572, "gen": 0.1912, "dys": 0.7171, "lo": 3.6438, "hi": 3.9174}, {"name": "Comoros", "rank": 132, "ladder": 3.5663, "g": "Q1", "gdp": 0.8955, "health": 0.3702, "social": 0.328, "freedom": 0.1721, "corr": 0.1597, "gen": 0.1285, "dys": 1.5123, "lo": 3.3783, "hi": 3.7543}, {"name": "Yemen", "rank": 133, "ladder": 3.561, "g": "Q1", "gdp": 0.6713, "health": 0.2927, "social": 1.2815, "freedom": 0.3624, "corr": 0.1132, "gen": 0.0801, "dys": 0.7599, "lo": 3.408, "hi": 3.714}, {"name": "Zambia", "rank": 134, "ladder": 3.5024, "g": "Q1", "gdp": 0.899, "health": 0.264, "social": 0.8089, "freedom": 0.7271, "corr": 0.1093, "gen": 0.1676, "dys": 0.5264, "lo": 3.3685, "hi": 3.6363}, {"name": "Eswatini", "rank": 135, "ladder": 3.502, "g": "Q1", "gdp": 1.2553, "health": 0.1759, "social": 0.9251, "freedom": 0.2841, "corr": 0.1159, "gen": 0.0594, "dys": 0.6863, "lo": 3.3307, "hi": 3.6733}, {"name": "Malawi", "rank": 136, "ladder": 3.421, "g": "Q1", "gdp": 0.6169, "health": 0.3491, "social": 0.4104, "freedom": 0.5709, "corr": 0.1358, "gen": 0.1348, "dys": 1.2031, "lo": 3.2811, "hi": 3.5609}, {"name": "Botswana", "rank": 137, "ladder": 3.3834, "g": "Q1", "gdp": 1.4447, "health": 0.2414, "social": 0.9686, "freedom": 0.5667, "corr": 0.0821, "gen": 0.0144, "dys": 0.0655, "lo": 3.2092, "hi": 3.5576}, {"name": "Zimbabwe", "rank": 138, "ladder": 3.3411, "g": "Q1", "gdp": 0.7483, "health": 0.2321, "social": 0.8501, "freedom": 0.4869, "corr": 0.1306, "gen": 0.0961, "dys": 0.797, "lo": 3.2256, "hi": 3.4566}, {"name": "Congo (Kinshasa)", "rank": 139, "ladder": 3.2954, "g": "Q1", "gdp": 0.5337, "health": 0.2615, "social": 0.6647, "freedom": 0.4727, "corr": 0.0722, "gen": 0.1887, "dys": 1.102, "lo": 3.1285, "hi": 3.4623}, {"name": "Sierra Leone", "rank": 140, "ladder": 3.2452, "g": "Q1", "gdp": 0.6543, "health": 0.2533, "social": 0.566, "freedom": 0.469, "corr": 0.0533, "gen": 0.1814, "dys": 1.0679, "lo": 3.1241, "hi": 3.3663}, {"name": "Lesotho", "rank": 141, "ladder": 3.1862, "g": "Q1", "gdp": 0.7708, "health": 0.0, "social": 0.8506, "freedom": 0.5232, "corr": 0.085, "gen": 0.0821, "dys": 0.8745, "lo": 2.9036, "hi": 3.4688}, {"name": "Lebanon", "rank": 142, "ladder": 2.7065, "g": "Q1", "gdp": 1.3767, "health": 0.5562, "social": 0.5767, "freedom": 0.1732, "corr": 0.0288, "gen": 0.0676, "dys": -0.0728, "lo": 2.6163, "hi": 2.7967}, {"name": "Afghanistan", "rank": 143, "ladder": 1.721, "g": "Q1", "gdp": 0.6281, "health": 0.2418, "social": 0.0, "freedom": 0.0, "corr": 0.0885, "gen": 0.0907, "dys": 0.6719, "lo": 1.6667, "hi": 1.7753}]};
+const COMP = [
+  {k:'gdp',   n:'PIB per cápita',            dim:'Económica',          c:'--c-gdp'},
+  {k:'health',n:'Esperanza de vida saludable',dim:'Salud',              c:'--c-health'},
+  {k:'social',n:'Apoyo social',              dim:'Socioinstitucional', c:'--c-social'},
+  {k:'freedom',n:'Libertad para decidir',    dim:'Socioinstitucional', c:'--c-freedom'},
+  {k:'corr',  n:'Baja corrupción percibida',  dim:'Socioinstitucional', c:'--c-corr'},
+  {k:'gen',   n:'Generosidad',               dim:'Referencia',         c:'--c-gen'},
+  {k:'dys',   n:'Distopía + residuo',        dim:'Referencia',         c:'--c-dys'}
+];
+const XVARS = [
+  {k:'gdp',n:'Económica: PIB per cápita'},{k:'health',n:'Salud: esperanza de vida'},
+  {k:'social',n:'Apoyo social'},{k:'freedom',n:'Libertad para decidir'},{k:'corr',n:'Baja corrupción percibida'},
+  {k:'soc',n:'Socioinstitucional (apoyo + libertad + baja corrupción percibida)'}
+];
+const GR = [
+  {id:'Q1',label:'Q1 · Bajo bienestar',c:'--q1'},
+  {id:'M', label:'Q2–Q3 · Intermedio', c:'--m'},
+  {id:'Q4',label:'Q4 · Alto bienestar',c:'--q4'}
+];
+const GNAME = {Q1:'Q1 · Bajo',M:'Q2–Q3 · Intermedio',Q4:'Q4 · Alto'};
+const S = {unit:'pts', ci:false, on:{Q1:true,M:true,Q4:true}, x:'soc', q:'', sel:null, sort:{k:'ladder',d:-1}};
+
+// ---------- utilidades ----------
+const f = (v,d=2)=>Number(v).toFixed(d).replace('.',',');
+const esc = s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const $ = id=>document.getElementById(id);
+const mean = a=>a.reduce((s,v)=>s+v,0)/a.length;
+const sd = a=>{const m=mean(a);return Math.sqrt(a.reduce((s,v)=>s+(v-m)**2,0)/(a.length-1))};
+const sg = v=>(v>=0?'+':'−')+f(Math.abs(v));
+let OUT=[];
+function corr(xs,ys){const mx=mean(xs),my=mean(ys);let a=0,b=0,c=0;for(let i=0;i<xs.length;i++){a+=(xs[i]-mx)*(ys[i]-my);b+=(xs[i]-mx)**2;c+=(ys[i]-my)**2}return a/Math.sqrt(b*c)}
+function ols(xs,ys){const mx=mean(xs),my=mean(ys);let a=0,b=0;for(let i=0;i<xs.length;i++){a+=(xs[i]-mx)*(ys[i]-my);b+=(xs[i]-mx)**2}const m=a/b;return {m,b:my-m*mx}}
+const D = DATA.countries; D.forEach(d=>{ if(d.gdp!==null){ d.soc=d.social+d.freedom+d.corr; } else d.soc=null; });
+const withDims = D.filter(d=>d.gdp!==null);
+const val = (d,k)=>d[k];
+const cssv = n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const gcol = id=>`var(${GR.find(g=>g.id===id).c})`;
+
+// ---------- cifras de referencia (grupos fijos Q1 y Q4) ----------
+const gm = {}; ['Q1','M','Q4'].forEach(g=>{const s=withDims.filter(d=>d.g===g); gm[g]={n:s.length}; COMP.forEach(c=>gm[g][c.k]=mean(s.map(d=>d[c.k]))); gm[g].soc=mean(s.map(d=>d.soc)); gm[g].ladder=mean(s.map(d=>d.ladder));});
+const gap = {}; COMP.forEach(c=>gap[c.k]=gm.Q4[c.k]-gm.Q1[c.k]); gap.soc=gm.Q4.soc-gm.Q1.soc; gap.ladder=gm.Q4.ladder-gm.Q1.ladder;
+const sdv=(a)=>sd(a), gq1=withDims.filter(d=>d.g==='Q1'), gq4=withDims.filter(d=>d.g==='Q4');
+const dgap={}; [...COMP.map(c=>c.k),'soc','ladder'].forEach(k=>{const a=gq1.map(d=>d[k]),b=gq4.map(d=>d[k]);dgap[k]=(mean(b)-mean(a))/Math.sqrt((sdv(a)**2+sdv(b)**2)/2)});
+const KEY5=['gdp','health','social','freedom','corr'];
+const nOvl=KEY5.filter(k=>Math.min(...gq4.map(d=>d[k]))<=Math.max(...gq1.map(d=>d[k]))).length;
+const q1max=Math.max(...gq1.map(d=>d.soc)), q4min=Math.min(...gq4.map(d=>d.soc));
+$('r1').innerHTML = `En puntos de la escalera, el PIB per cápita tiene la mayor brecha Q4 − Q1: <b>+${f(gap.gdp)}</b> (apoyo social +${f(gap.social)}). Esos puntos dependen de los coeficientes del modelo del informe. En desviaciones estándar, PIB (<b>${f(dgap.gdp,1)}</b>), salud (${f(dgap.health,1)}) y apoyo social (${f(dgap.social,1)}) quedan muy cerca. Cambie la unidad en el gráfico 2.`;
+$('r2').innerHTML = `Suma de tres componentes: <b>+${f(gap.soc)}</b> puntos. En esta suma Q1 llega hasta ${f(q1max,3)} y Q4 empieza en ${f(q4min,3)}: la separación es mínima y en parte mecánica, porque se suman tres componentes. En cada uno de los cinco indicadores por separado, Q1 y Q4 sí se traslapan (${nOvl} de 5).`;
+$('r3').innerHTML = `Las contribuciones son parte del propio Ladder score, así que parte de la correlación viene de cómo se construye el archivo. Q1 y Q4 son un corte reproducible pero arbitrario.`;
+
+// ---------- tooltip ----------
+const tip = $('tip');
+function showTip(e,html){tip.innerHTML=html;tip.style.opacity=1;const w=tip.offsetWidth,h=tip.offsetHeight;let x=e.clientX+14,y=e.clientY+14;if(x+w>innerWidth-8)x=e.clientX-w-14;if(y+h>innerHeight-8)y=e.clientY-h-14;tip.style.left=Math.max(8,x)+'px';tip.style.top=Math.max(8,y)+'px'}
+function hideTip(){tip.style.opacity=0}
+function bindTips(el){
+  el.addEventListener('mousemove',e=>{const t=e.target.closest('[data-tip]');t?showTip(e,t.getAttribute('data-tip')):hideTip()});
+  el.addEventListener('mouseleave',hideTip);
+  el.addEventListener('click',e=>{const t=e.target.closest('[data-tip]');if(t&&matchMedia('(hover:none)').matches)showTip(e,t.getAttribute('data-tip'));const n=e.target.closest('[data-name]');if(n){S.sel=n.getAttribute('data-name');renderAll()}});
+}
+
+// ---------- controles ----------
+$('chips').innerHTML = GR.map(g=>`<button class="chip" style="--c:var(${g.c})" data-g="${g.id}" aria-pressed="true"><i></i>${g.label}</button>`).join('');
+$('chips').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;const id=b.dataset.g;S.on[id]=!S.on[id];if(!S.on.Q1&&!S.on.M&&!S.on.Q4)S.on[id]=true;b.setAttribute('aria-pressed',S.on[id]);renderAll()});
+$('xvar').innerHTML = XVARS.map(v=>`<option value="${v.k}"${v.k===S.x?' selected':''}>${v.n}</option>`).join('');
+$('xvar').addEventListener('change',e=>{S.x=e.target.value;renderAll()});
+$('unit').innerHTML='<option value="pts">Puntos de la escalera</option><option value="std">Desviaciones estándar</option>';
+$('unit').addEventListener('change',e=>{S.unit=e.target.value;renderAll()});
+$('ci').addEventListener('change',e=>{S.ci=e.target.checked;renderAll()});
+$('q').addEventListener('input',e=>{S.q=e.target.value.trim().toLowerCase();S.sel=null;renderAll()});
+$('legend').innerHTML = COMP.map(c=>`<span style="--c:var(${c.c})"><i></i>${c.n}</span>`).join('');
+
+const active = ()=>D.filter(d=>S.on[d.g]);
+const hit = d=>S.sel? d.name===S.sel : (S.q && d.name.toLowerCase().includes(S.q));
+
+// ---------- KPIs ----------
+function renderKpis(){
+  const a=active(); const ad=a.filter(d=>d.gdp!==null);
+  const xv=XVARS.find(v=>v.k===S.x);
+  const pts=ad.filter(d=>!(S.x==='gdp'&&d.gdp===0));
+  const r=pts.length>2?corr(pts.map(d=>d[S.x]),pts.map(d=>d.ladder)):NaN;
+  $('kpis').innerHTML=`
+   <div class="kpi"><span>Países en vista</span><b>${a.length}</b><small>de ${D.length}</small></div>
+   <div class="kpi"><span>Ladder score promedio</span><b>${f(mean(a.map(d=>d.ladder)))}</b><small>escala 0 a 10</small></div>
+   <div class="kpi"><span>Brecha de promedios Q4 − Q1</span><b>${f(gap.ladder)}</b><small>puntos de la escalera</small></div>
+   <div class="kpi"><span>Correlación con el eje X</span><b>${isNaN(r)?'—':f(r)}</b><small>${esc(xv.n)}${pts.length?`, n = ${pts.length}`:''}${Object.values(S.on).filter(Boolean).length===1?'. Dentro de un solo grupo: no comparable con la correlación global':''}</small></div>`;
+}
+
+// ---------- gráfico 1: histograma ----------
+function chart1(){
+  const el=$('c1'), W=el.clientWidth||500, H=Math.min(300,Math.max(220,W*0.55)), m={l:34,r:10,t:14,b:30};
+  const bw=0.25, lo=1.5, hi=8, nb=Math.round((hi-lo)/bw);
+  const bins=Array.from({length:nb},(_,i)=>({a:lo+i*bw,Q1:0,M:0,Q4:0}));
+  D.forEach(d=>{const i=Math.min(nb-1,Math.floor((d.ladder-lo)/bw));bins[i][d.g]++});
+  const ymax=Math.max(...bins.map(b=>(S.on.Q1?b.Q1:0)+(S.on.M?b.M:0)+(S.on.Q4?b.Q4:0)),4);
+  const X=v=>m.l+(v-lo)/(hi-lo)*(W-m.l-m.r), Y=v=>H-m.b-v/ymax*(H-m.t-m.b);
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Histograma del Ladder score por grupo">`;
+  const yt=[];for(let v=0;v<=ymax;v+=ymax>12?4:2)yt.push(v);
+  s+=`<g class="grid">${yt.map(v=>`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}"/>`).join('')}</g>`;
+  s+=yt.map(v=>`<text x="${m.l-6}" y="${Y(v)+3}" text-anchor="end">${v}</text>`).join('');
+  bins.forEach(b=>{let base=0;['Q1','M','Q4'].forEach(g=>{if(!S.on[g]||!b[g])return;const y0=Y(base),y1=Y(base+b[g]);
+    s+=`<rect x="${X(b.a)+0.5}" y="${y1}" width="${Math.max(1,X(b.a+bw)-X(b.a)-1)}" height="${y0-y1}" fill="var(${GR.find(x=>x.id===g).c})" data-tip="<b>${f(b.a)} a ${f(b.a+bw)}</b><br>${GNAME[g]}: ${b[g]} países"/>`;base+=b[g]})});
+  s+=`<line class="axis" x1="${m.l}" x2="${W-m.r}" y1="${H-m.b}" y2="${H-m.b}"/>`;
+  for(let v=2;v<=8;v++)s+=`<text x="${X(v)}" y="${H-m.b+14}" text-anchor="middle">${v}</text>`;
+  [[DATA.q1,'Corte Q1','end'],[DATA.q3,'Corte Q4','start']].forEach(([v,t,an])=>{s+=`<line x1="${X(v)}" x2="${X(v)}" y1="${m.t-4}" y2="${H-m.b}" stroke="var(--ink)" stroke-dasharray="4 3"/><text class="lbl" x="${X(v)+(an==='end'?-5:5)}" y="${m.t+6}" text-anchor="${an}">${t} ${f(v)}</text>`});
+  s+=`<text x="${(W+m.l)/2}" y="${H-2}" text-anchor="middle">Ladder score</text></svg>`;
+  el.innerHTML=s;
+}
+
+// ---------- gráfico 2: brechas ----------
+function chart2(){
+  const std=S.unit==='std', G=std?dgap:gap;
+  $('s2').textContent=std?'Brecha estandarizada: (promedio Q4 − promedio Q1) dividida por la desviación estándar combinada de ambos grupos. Permite comparar indicadores con escalas distintas (140 países con datos).':'Promedio de Q4 menos promedio de Q1, en puntos de la escalera (140 países con datos). Estos puntos dependen de los coeficientes del modelo del informe.';
+  const el=$('c2'), W=el.clientWidth||500, rowH=30, m={l:Math.min(170,W*0.38),r:44,t:6,b:24}, H=m.t+m.b+rowH*COMP.length;
+  const rows=COMP.map(c=>({...c,v:G[c.k]})).sort((a,b)=>b.v-a.v);
+  const mx=Math.max(...rows.map(r=>r.v))*1.05, X=v=>m.l+v/mx*(W-m.l-m.r);
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Brecha Q4 menos Q1 por componente">`;
+  (std?[0,1,2,3,4]:[0,.2,.4,.6,.8,1]).filter(v=>v<=mx).forEach(v=>{s+=`<line x1="${X(v)}" x2="${X(v)}" y1="${m.t}" y2="${H-m.b}" stroke="var(--soft)"/><text x="${X(v)}" y="${H-8}" text-anchor="middle">${f(v,std?0:1)}</text>`});
+  rows.forEach((r,i)=>{const y=m.t+i*rowH;
+    s+=`<text class="lbl" x="${m.l-8}" y="${y+rowH/2+4}" text-anchor="end">${r.n}</text>
+    <rect x="${m.l}" y="${y+5}" width="${X(r.v)-m.l}" height="${rowH-10}" rx="2" fill="var(${r.c})" data-tip="<b>${r.n}</b> (${r.dim})<br>Q4: ${f(gm.Q4[r.k])} · Q1: ${f(gm.Q1[r.k])}<br>Brecha: +${f(gap[r.k])} puntos · +${f(dgap[r.k],1)} desv. est."/>
+    <text class="lbl" x="${X(r.v)+6}" y="${y+rowH/2+4}">${f(r.v,std?1:2)}</text>`});
+  el.innerHTML=s+'</svg>';
+}
+
+// ---------- gráfico 3: composición ----------
+function chart3(){
+  const el=$('c3'), W=el.clientWidth||500, rowH=54, m={l:96,r:62,t:8,b:24}, H=m.t+m.b+rowH*3;
+  const mx=8, X=v=>m.l+v/mx*(W-m.l-m.r);
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Composición del puntaje promedio por grupo">`;
+  for(let v=0;v<=8;v+=2)s+=`<line x1="${X(v)}" x2="${X(v)}" y1="${m.t}" y2="${H-m.b}" stroke="var(--soft)"/><text x="${X(v)}" y="${H-8}" text-anchor="middle">${v}</text>`;
+  ['Q4','M','Q1'].forEach((g,i)=>{const y=m.t+i*rowH, on=S.on[g]; let acc=0;
+    s+=`<g opacity="${on?1:.22}"><text class="lbl" x="${m.l-8}" y="${y+rowH/2+4}" text-anchor="end">${GNAME[g].split(' · ')[0]==='Q2–Q3'?'Q2–Q3':GNAME[g].split(' · ')[0]}</text>`;
+    COMP.forEach(c=>{const w=X(acc+gm[g][c.k])-X(acc);
+      s+=`<rect x="${X(acc)}" y="${y+8}" width="${w}" height="${rowH-16}" fill="var(${c.c})" stroke="var(--surface)" stroke-width="1" data-tip="<b>${GNAME[g]}</b><br>${c.n}: ${f(gm[g][c.k])} puntos"/>`;acc+=gm[g][c.k]});
+    s+=`<text class="lbl" x="${X(acc)+6}" y="${y+rowH/2+4}" style="font-weight:600">${f(acc)}</text></g>`});
+  el.innerHTML=s+'</svg>';
+}
+
+// ---------- gráfico 4: dispersión ----------
+function chart4(){
+  const el=$('c4'), W=el.clientWidth||500, H=Math.min(420,Math.max(300,W*0.7)), m={l:38,r:12,t:12,b:38};
+  const xv=XVARS.find(v=>v.k===S.x), pts=withDims.filter(d=>S.on[d.g]);
+  const allx=withDims.map(d=>d[S.x]); const x0=0, x1=Math.ceil(Math.max(...allx)*10)/10+0.05, y0=1, y1=8;
+  const X=v=>m.l+(v-x0)/(x1-x0)*(W-m.l-m.r), Y=v=>H-m.b-(v-y0)/(y1-y0)*(H-m.t-m.b);
+  $('t4').textContent='4. '+xv.n.split(':')[0]+' y bienestar, país por país';
+  $('s4').textContent='Cada punto es un país. Cambie el eje X en la barra de filtros. Las líneas horizontales marcan los cortes de Q1 y Q4.';
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Dispersión de ${esc(xv.n)} contra Ladder score">`;
+  for(let v=1;v<=8;v++)s+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--soft)"/><text x="${m.l-6}" y="${Y(v)+3}" text-anchor="end">${v}</text>`;
+  const step=x1>2.5?0.5:0.25;for(let v=0;v<=x1;v+=step)s+=`<text x="${X(v)}" y="${H-m.b+14}" text-anchor="middle">${f(v,step<0.5?2:1)}</text>`;
+  [[DATA.q1,'Q1'],[DATA.q3,'Q4']].forEach(([v,t])=>{s+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--ink)" stroke-dasharray="4 3" opacity=".55"/><text x="${W-m.r-2}" y="${Y(v)-4}" text-anchor="end">Corte ${t}</text>`});
+  const fitPts=pts.filter(d=>!(S.x==='gdp'&&d.gdp===0));
+  if(fitPts.length>2){const {m:sl,b:ic}=ols(fitPts.map(d=>d[S.x]),fitPts.map(d=>d.ladder));const a=Math.min(...fitPts.map(d=>d[S.x])),b=Math.max(...fitPts.map(d=>d[S.x]));
+    s+=`<line x1="${X(a)}" x2="${X(b)}" y1="${Y(ic+sl*a)}" y2="${Y(ic+sl*b)}" stroke="var(--ink)" stroke-width="1.2" opacity=".7"/>`}
+  D.forEach(d=>{d.res=null;d.z=null;d.ex=null}); OUT=[];
+  if(fitPts.length>2){const {m:sl,b:ic}=ols(fitPts.map(d=>d[S.x]),fitPts.map(d=>d.ladder));const rs=fitPts.map(d=>d.ladder-(ic+sl*d[S.x])), sdr=sd(rs);
+    fitPts.forEach((d,i)=>{const yh=ic+sl*d[S.x];d.res=rs[i];d.z=rs[i]/sdr;d.ex=(d.lo<=yh&&yh<=d.hi)});
+    OUT=fitPts.filter(d=>Math.abs(d.z)>=2).sort((a,b)=>Math.abs(b.z)-Math.abs(a.z))}
+  s+=`<line class="axis" x1="${m.l}" x2="${W-m.r}" y1="${H-m.b}" y2="${H-m.b}"/>`;
+  s+=`<text x="${(W+m.l)/2}" y="${H-4}" text-anchor="middle">${esc(xv.n)} (puntos de la escalera)</text><text transform="translate(11 ${H/2}) rotate(-90)" text-anchor="middle">Ladder score</text>`;
+  const dim=(S.q||S.sel);
+  pts.forEach(d=>{const h=hit(d), isOut=d.res!==null&&Math.abs(d.z)>=2;
+    if(S.ci||h)s+=`<line x1="${X(d[S.x])}" x2="${X(d[S.x])}" y1="${Y(d.hi)}" y2="${Y(d.lo)}" stroke="var(${GR.find(g=>g.id===d.g).c})" stroke-width="1.4" opacity="${dim&&!h?.2:.45}"/>`;
+    s+=`<circle cx="${X(d[S.x])}" cy="${Y(d.ladder)}" r="${h?7:4.6}" fill="var(${GR.find(g=>g.id===d.g).c})" stroke="${(h||isOut)?'var(--ink)':'var(--surface)'}" stroke-width="${h?2.2:(isOut?1.6:1)}" opacity="${dim&&!h?.35:1}" data-name="${esc(d.name)}" data-tip="<b>${esc(d.name)}</b> · puesto ${d.rank}<br>Ladder score: ${f(d.ladder)}<br>${esc(xv.n.split(':')[0])}: ${f(d[S.x])}<br>${GNAME[d.g]}<br>IC 95%: ${f(d.lo)} a ${f(d.hi)}${d.res!==null?`<br>Residuo: ${sg(d.res)} (${d.ex?'dentro':'fuera'} del IC 95%)`:''}"/>`;
+    if(h||(isOut&&OUT.indexOf(d)<6))s+=`<text class="lbl" x="${X(d[S.x])+10}" y="${Y(d.ladder)+4}" style="font-weight:600">${esc(d.name)}</text>`});
+  el.innerHTML=s+'</svg>';
+  $('n4').textContent = S.x==='gdp'&&pts.some(d=>d.gdp===0)?'Venezuela (PIB = 0 en el archivo) se dibuja pero no entra en la línea ni en la correlación.':(S.x==='soc'?'Esta dimensión suma tres componentes, por lo que tiene un rango más amplio que el PIB.':'');
+  if(S.x==='corr')$('n4').textContent='Un valor mayor significa menos corrupción percibida respecto de Distopía; no es el nivel de corrupción.';
+  $('out').innerHTML = OUT.length ? `<b>Países atípicos respecto a la recta</b> (residuo estandarizado ≥ 2 en valor absoluto; residuo = Ladder observado − valor de la recta; «dentro del IC» = el IC 95% del Ladder score incluye el valor de la recta, así que la desviación no se distingue de la incertidumbre de la medición). Clic en un nombre para resaltarlo: `+OUT.slice(0,8).map(d=>`<span data-name="${esc(d.name)}" style="cursor:pointer;text-decoration:underline">${esc(d.name)}</span> (${sg(d.res)}, ${d.ex?'dentro':'fuera'} del IC)`).join('; ')+(OUT.length>8?`; y ${OUT.length-8} más en la tabla (columna Residuo)`:'')+'.' : 'No hay países con residuo estandarizado ≥ 2 con la selección actual.';
+}
+
+// ---------- tabla ----------
+const COLS=[{k:'rank',n:'#',num:1},{k:'name',n:'País'},{k:'g',n:'Grupo'},{k:'ladder',n:'Ladder',num:1},{k:'gdp',n:'PIB',num:1},{k:'health',n:'Salud',num:1},{k:'social',n:'Apoyo',num:1},{k:'freedom',n:'Libertad',num:1},{k:'corr',n:'Baja corrup.',num:1},{k:'res',n:'Residuo',num:1}];
+function renderTable(){
+  const rows=active().filter(d=>!S.q||d.name.toLowerCase().includes(S.q)).slice().sort((a,b)=>{const k=S.sort.k;let x=a[k],y=b[k];if(x===null)return 1;if(y===null)return -1;return (typeof x==='string'?x.localeCompare(y):x-y)*S.sort.d});
+  $('tbl').innerHTML=`<thead><tr>${COLS.map(c=>`<th class="${c.num?'n':''}" data-k="${c.k}">${c.n}${S.sort.k===c.k?(S.sort.d>0?' ▲':' ▼'):''}</th>`).join('')}</tr></thead><tbody>${rows.map(d=>`<tr class="${S.sel===d.name?'sel':''}" data-name="${esc(d.name)}"><td class="n">${d.rank}</td><td>${esc(d.name)}</td><td><i class="dot" style="--c:var(${GR.find(g=>g.id===d.g).c})"></i>${GNAME[d.g].split(' · ')[0]}</td><td class="n">${f(d.ladder)}</td>${['gdp','health','social','freedom','corr','res'].map(k=>`<td class="n">${d[k]===null?'—':(k==='res'?sg(d[k]):f(d[k]))}</td>`).join('')}</tr>`).join('')}</tbody>`;
+}
+$('tbl').addEventListener('click',e=>{const th=e.target.closest('th');if(th){const k=th.dataset.k;S.sort=S.sort.k===k?{k,d:-S.sort.d}:{k,d:(k==='name'||k==='g'||k==='rank')?1:-1};renderTable();return}
+  const tr=e.target.closest('tr[data-name]');if(tr){S.sel=S.sel===tr.dataset.name?null:tr.dataset.name;renderAll()}});
+
+function renderAll(){renderKpis();chart1();chart2();chart3();chart4();renderTable()}
+['c1','c2','c3','c4','out'].forEach(id=>bindTips($(id)));
+let lastW=0;new ResizeObserver(()=>{const w=$('c1').clientWidth;if(Math.abs(w-lastW)>2){lastW=w;renderAll()}}).observe($('c1'));
+renderAll();
+</script>
+
+</body></html>

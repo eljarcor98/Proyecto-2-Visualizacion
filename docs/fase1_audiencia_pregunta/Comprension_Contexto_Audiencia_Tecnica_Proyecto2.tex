@@ -1,0 +1,134 @@
+\documentclass[11pt]{article}
+
+% --- Paquetes de configuración ---
+\usepackage{ifxetex}
+\ifxetex
+  \usepackage{fontspec}
+\else
+  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
+\fi
+\usepackage[spanish,es-tabla]{babel}
+
+% --- Geometría de página exacta al original ---
+\usepackage[top=1.8cm, bottom=1.8cm, left=2.4cm, right=2.4cm]{geometry}
+
+% --- Matemáticas y tablas ---
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{xltabular}
+\usepackage{array}
+\usepackage{enumitem}
+
+% --- Enlaces ---
+\usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}
+
+% --- Configuración de párrafos e interlineado ---
+\setlength{\parskip}{0.32em}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+% --- Encabezado idéntico al formato original ---
+\begin{center}
+    {\Large \textbf{Comprensión del contexto y delimitación de la audiencia técnica}}\\[0.3em]
+    {\large Proyecto 2 --- Visualización I}\\[0.8em]
+    Arnold Santiago Torres Anzola\\
+    Juan David Cruz Romero
+\end{center}
+
+\vspace{0.2em}
+
+% ==============================================================================
+% 1. COMPRENSIÓN DEL CONTEXTO
+% ==============================================================================
+\section{Comprensión del Contexto}
+
+El \textit{World Happiness Report 2024} analiza el bienestar subjetivo a nivel global a partir de las evaluaciones de vida recopiladas mediante la Encuesta Mundial de Gallup (\textit{Gallup World Poll}). Dicha medición emplea la escalera de Cantril (\textit{Cantril Self-Anchoring Striving Scale}), un instrumento psicométrico en el que los encuestados evalúan su vida actual en una escala de 0 a 10, donde el peldaño 0 representa la peor vida posible y el 10 la mejor vida alcanzable (reportada como promedio móvil trienal nacional 2021--2023).
+
+Para explicar las diferencias observadas entre naciones, el informe utiliza un modelo econométrico de descomposición aditiva basado en una referencia estandarizada denominada \textit{Distopía} (un país ficticio cuyos indicadores corresponden a los mínimos históricos observados a nivel global, con puntaje base $\approx 1.97$), sumada a la contribución de seis factores explicativos clave: PIB per cápita, apoyo social, esperanza de vida saludable, libertad de elección vital, generosidad y percepción de corrupción, junto al residuo no modelado (\textit{Dystopia + residual}).
+
+En cumplimiento de las directrices del proyecto, el marco analítico se restringe exclusivamente al archivo oficial \texttt{WHR24\_Data\_Figure\_2.1.xls} (143 observaciones nacionales y 11 variables), asumiendo el rol de científicos de datos responsables de estructurar una exploración reproducible orientada a examinar los patrones de relación entre dichos indicadores y la calidad de vida de las poblaciones.
+
+% ==============================================================================
+% 2. AUDIENCIA TÉCNICA
+% ==============================================================================
+\section{Audiencia Técnica}
+
+La audiencia técnica está delimitada específicamente al \textbf{Equipo Técnico de Análisis Comparativo de Bienestar y Políticas Públicas de un Organismo Multilateral de Desarrollo} (homólogo a la Unidad de Estadísticas y Bienestar Social del PNUD o la Dirección de Estadísticas de la OCDE).
+
+Este equipo especializado está integrado por economistas aplicados, analistas cuantitativos y científicos de datos que evalúan diagnósticos comparativos internacionales sobre las condiciones de vida entre naciones. Su interés técnico concreto radica en comprender cómo interactúan las variables de orden material (PIB per cápita y salud) con las dimensiones cívico-sociales e institucionales (apoyo social, libertad y corrupción) al caracterizar las brechas de bienestar, contrastando perfiles de países y evaluando en qué medida factores sociales amortiguan o potencian el bienestar. Para ello, requieren un flujo de trabajo reproducible, trazabilidad metodológica completa y rigurosa cautela inferencial, evitando atribuir causalidad a datos de naturaleza observacional y transversal.
+
+% ==============================================================================
+% 3. PREGUNTA ANALÍTICA
+% ==============================================================================
+\section{Pregunta Analítica}
+
+¿Qué variables se asocian con la calidad de vida y evaluación del bienestar de los países, qué diferencias se evidencian entre naciones y de qué manera las condiciones económicas, de salud y socioinstitucionales diferencian a los países con alta y baja evaluación vital en el World Happiness Report 2024?
+
+% ==============================================================================
+% 4. VARIABLES EN EL WORLD HAPPINESS REPORT 2024
+% ==============================================================================
+\section{Variables en el World Happiness Report 2024}
+
+\textit{Diccionario y Documentación de Variables para Análisis y Visualización}
+
+\vspace{0.4em}
+
+\begin{xltabular}{\textwidth}{>{\bfseries\raggedright\arraybackslash}p{2.8cm} >{\raggedright\arraybackslash}p{3.5cm} >{\raggedright\arraybackslash}p{3.5cm} >{\raggedright\arraybackslash}X}
+\caption{Diccionario y especificación de variables del World Happiness Report 2024.} \label{tab:variables_whr2024} \\
+\toprule
+Variable & ¿Qué es? & ¿Cómo se mide? & ¿Qué significa / Interpretación? \\
+\midrule
+\endfirsthead
+
+\multicolumn{4}{c}%
+{{\bfseries \tablename\ \thetable{} -- Continuación de la página anterior}} \\
+\toprule
+Variable & ¿Qué es? & ¿Cómo se mide? & ¿Qué significa / Interpretación? \\
+\midrule
+\endhead
+
+\midrule
+\multicolumn{4}{r}{{Continúa en la siguiente página...}} \\
+\bottomrule
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+Country name & Identificador geográfico territorial. & Cadena de texto con el nombre oficial del país (143 registros). & Unidad básica de observación y desagregación analítica internacional. \\
+\addlinespace[3pt]
+Ladder score & Variable objetivo (dependiente). Evaluación global de calidad de vida. & Encuesta Gallup World Poll. Escala de 0 a 10 (0 = peor vida, 10 = mejor vida). Promedio móvil trienal. & Refleja el nivel general de satisfacción y bienestar subjetivo reportado por la población. Métrica central del reporte. \\
+\addlinespace[3pt]
+upperwhisker / lowerwhisker & Intervalo de confianza de la evaluación de vida. & Escala de 0 a 10. Límites superior e inferior estimados al 95\% de confianza. & Expresa la precisión estadística y variabilidad muestral del \textit{Ladder score} en cada país. \\
+\addlinespace[3pt]
+Explained by: Log GDP per capita & Contribución de la prosperidad económica por habitante. & Puntos de la escala explicados por $\ln(\text{PIB PPA})$ (Banco Mundial / WDI). & Dimensión económica. Expresa los rendimientos marginales decrecientes del ingreso sobre la calidad de vida. \\
+\addlinespace[3pt]
+Explained by: Social support & Contribución de las redes de auxilio y apoyo social. & Proporción nacional que responde «sí» a contar con amigos o familiares en momentos difíciles. & Refleja la solidez del tejido social y el respaldo comunitario ante situaciones de vulnerabilidad o crisis. \\
+\addlinespace[3pt]
+Explained by: Healthy life expectancy & Contribución de la salud física y longevidad funcional. & Estimaciones OMS: promedio de años esperados de vida en buen estado de salud funcional al nacer. & Evalúa la dimensión fisiológica y el impacto de la ausencia de enfermedades o discapacidades limitantes. \\
+\addlinespace[3pt]
+Explained by: Freedom to make life choices & Contribución de la autonomía y libertad vital. & Proporción de la población satisfecha con su libertad para elegir qué hacer con su vida (0 a 1). & Medida de autodeterminación y oportunidades de realización personal percibidas sin coacciones. \\
+\addlinespace[3pt]
+Explained by: Generosity & Contribución del comportamiento prosocial y solidario. & Residuo de donaciones benéficas monetarias en el último mes, controlado por el PIB per cápita. & Captura la disposición solidaria y altruista de la sociedad con independencia de su capacidad adquisitiva. \\
+\addlinespace[3pt]
+Explained by: Perceptions of corruption & Contribución de la confianza institucional y gobernanza. & Promedio de percepción sobre extensión de corrupción en entidades del gobierno y empresas (0 a 1). & Mide la integridad institucional. Mayores contribuciones indican menor corrupción percibida en el entorno. \\
+\addlinespace[3pt]
+Dystopia + residual & Línea base de Distopía más residuo no modelado. & Puntaje base de Distopía ($\approx 1.97$) más el residuo econométrico no capturado por los 6 factores. & Garantiza la descomposición aditiva y cuantifica la proporción del bienestar debida a factores no medidos. \\
+\end{xltabular}
+
+\vspace{0.8em}
+
+% ==============================================================================
+% REFERENCIAS
+% ==============================================================================
+\section*{Referencias}
+\addcontentsline{toc}{section}{Referencias}
+
+\begin{enumerate}[label={[\arabic*]}, leftmargin=*, noitemsep]
+    \item World Happiness Report 2024 $|$ The World Happiness Report. Disponible en: \url{https://worldhappiness.report/ed/2024/}
+    \item Sustainable Development Solutions Network (SDSN). (2024). \textit{WHR 2024 --- Data for Figure 2.1} [Dataset oficial]. Disponible en: \url{https://files.worldhappiness.report/WHR24_Data_Figure_2.1.xls}
+\end{enumerate}
+
+\end{document}
