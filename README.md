@@ -12,98 +12,107 @@
 
 ## 🎯 Pregunta Analítica y Audiencia Técnica
 
-* **Audiencia Objetivo:** Equipo Técnico de Análisis Comparativo de Bienestar y Políticas Públicas de un Organismo Multilateral de Desarrollo (homólogo a unidades técnicas de PNUD / OCDE).
+* **Audiencia Objetivo:** Equipo Técnico de Análisis Comparativo de Bienestar y Políticas Públicas de un Organismo Multilateral de Desarrollo (homólogo a unidades técnicas especializadas de PNUD, Banco Mundial o la OCDE).
 * **Pregunta Central de Investigación:**
   > *«¿Qué variables se asocian con la calidad de vida y evaluación del bienestar de los países, qué diferencias se evidencian entre naciones y de qué manera las condiciones económicas, de salud y socioinstitucionales diferencian a los países con alta y baja evaluación vital en el World Happiness Report 2024?»*
+* **Instrumento Psicométrico Base:**
+  La variable dependiente principal (`Ladder score`) proviene de la **Escala de Autoanclaje y Esfuerzo de Cantril** (*Cantril Self-Anchoring Striving Scale*, desarrollada por Hadley Cantril en 1965 y aplicada globalmente por el *Gallup World Poll*). Dicho instrumento pide al ciudadano evaluar su vida en una escala de 0 (*peor vida posible*) a 10 (*mejor vida posible*).
 
 ---
 
 ## 📁 Estructura del Repositorio
 
-El repositorio adopta una arquitectura modular y orientada a la reproducibilidad analítica:
+El repositorio adopta una arquitectura modular, orientada a la reproducibilidad analítica y documental:
 
 ```text
 Proyecto-2-Visualizacion/
 ├── data/
 │   └── raw/
-│       └── WHR24_Data_Figure_2.1.xls          <- Archivo fuente oficial de Gallup / WHR 2024
+│       └── WHR24_Data_Figure_2.1.xls          <- Archivo fuente oficial de Gallup / WHR 2024 (143 países)
 ├── notebooks/
-│   └── EquipoX_Proyecto2_Visualizacion.ipynb  <- Cuaderno principal con EDA, Seaborn, Plotly y narrativa
+│   └── EquipoX_Proyecto2_Visualizacion.ipynb  <- Cuaderno Jupyter ejecutable de principio a fin (Fases 1 a 10)
 ├── exports/
-│   └── EquipoX_Proyecto2_Dashboard.html       <- Tablero BI interactivo (Gestalt y lectura en Z)
+│   └── EquipoX_Proyecto2_Dashboard.html       <- Plataforma interactiva de inteligencia de datos (WHR & Gallup)
 ├── docs/
 │   ├── fase1_audiencia_pregunta/
-│   │   ├── Comprension_Contexto_...tex        <- Documento técnico de delimitación (Fase 1)
-│   │   └── Comprension_Contexto_...pdf        <- PDF compilado de la Fase 1
-│   ├── entregables/                           <- Resúmenes y memorandos ejecutivos
-│   └── instrucciones/                         <- Rúbrica y directrices del curso
-├── create_storytelling_dashboard.py           <- Generador autónomo del Tablero BI interactivo
-└── README.md                                  <- Documentación general del proyecto
+│   │   ├── Comprension_Contexto_Audiencia_Tecnica_Proyecto2.tex <- Documento técnico maestro en LaTeX (8 págs.)
+│   │   ├── Comprension_Contexto_Audiencia_Tecnica_Proyecto2.pdf <- PDF oficial compilado con Tectonic
+│   │   ├── compilar.py                        <- Script Python para compilación reproducible del PDF
+│   │   └── figura_resumen_brechas.png         <- Infografía analítica de brechas y correlación OLS
+│   ├── entregables/
+│   │   ├── EquipoX_Proyecto2_Resumen.tex      <- Resumen ejecutivo multilateral de 3 páginas (LaTeX)
+│   │   ├── EquipoX_Proyecto2_Resumen.pdf      <- PDF del resumen ejecutivo compilado
+│   │   ├── compilar.py                        <- Compilador automatizado del resumen
+│   │   ├── compilar_pdf.bat                   <- Lanzador por lotes Windows para compilar
+│   │   └── figura_resumen_brechas.png         <- Copia de respaldo de la infografía
+│   └── instrucciones/
+│       └── Instrucciones_Proyecto_2_Visualizacion_Python.pdf <- Guía y rúbrica oficial de evaluación
+├── bin/
+│   └── tectonic.exe                           <- Motor autónomo de compilación LaTeX XeTeX (sin dependencias)
+├── create_storytelling_dashboard.py           <- Generador Python del portal interactivo WHR / Gallup
+└── README.md                                  <- Documentación general del proyecto y guía de ejecución
 ```
 
 ---
 
 ## 📦 Entregables Principales
 
-### 1. Cuaderno Principal (`notebooks/EquipoX_Proyecto2_Visualizacion.ipynb`)
-Implementa el ciclo completo de análisis y visualización reproducible:
-* **Fase 4 (Ingesta y Preparación):** Validación estructural (0 duplicados, consistencia de intervalos y tolerancia matemática $\text{MAE} < 0,00003$ pts), traducción exhaustiva de los 143 países y variables al español, cálculo de cuartiles empíricos (partición por 25%), construcción de la condición socioinstitucional y matriz de estadísticos descriptivos robustos (Media $\pm$ Desv, Mediana, Mín-Máx, IQR, CV% y Asimetría).
-* **Fase 5 (Planificación):** Diseño comparativo orientado a responder la pregunta analítica.
+### 1. Documento Técnico Maestro (`docs/fase1_audiencia_pregunta/`)
+Documento institucional formal en formato LaTeX (`Comprension_Contexto_Audiencia_Tecnica_Proyecto2.pdf`, 8 páginas exactas sin desbordes):
+* **Secciones 1 a 4:** Contexto multilateral, delimitación de la audiencia técnica, pregunta analítica y diccionario de variables completo (`xltabular`).
+* **Sección 5 (Numeral 8):** Interpretación técnica pormenorizada de las 6 visualizaciones (Seaborn Figs. 1–4, Plotly Figs. 5–6), matriz comparativa de brechas $Q4$ vs. $Q1$, panel con figura resumen y análisis de casos de resiliencia (Nicaragua, El Salvador, Costa Rica) y vulnerabilidad (Botsuana, Líbano, Afganistán).
+* **Sección 6 (Numeral 9):** Síntesis de hallazgos empíricos y respuesta directa y categórica a la pregunta de investigación.
+* **Sección 7:** Cautela inferencial y limitaciones metodológicas (datos transversales, naturaleza no causal y agregaciones ecológicas).
+* **Sección 8:** Trazabilidad de reproducibilidad computacional y especificación de la plataforma interactiva.
+* **Sección 9:** Declaración de uso asistido de Inteligencia Artificial (con desglose de actividades asistidas y validaciones humanas independientes).
+* **Bibliografía:** Referencias al WHR 2024, SDSN, Gallup World Poll y la obra psicométrica original de Hadley Cantril (1965).
+
+### 2. Resumen Ejecutivo Multilateral (`docs/entregables/`)
+Documento sintético de exactamente 3 páginas (`EquipoX_Proyecto2_Resumen.pdf`) orientado a directores de organismos de desarrollo con diagnóstico macroeconómico, gráfico de brechas e implicaciones operativas.
+
+### 3. Cuaderno Principal Reproducible (`notebooks/EquipoX_Proyecto2_Visualizacion.ipynb`)
+Implementa el ciclo analítico integral de 10 fases ejecutables secuencialmente:
+* **Fases 1–3:** Formulación de audiencia, pregunta de investigación y catálogo de variables.
+* **Fase 4 (Ingesta y Preparación):** Validación de consistencia matemática ($\text{MAE} < 0,00003$ pts frente al total reportado), traducción exhaustiva al español de las 143 naciones, segmentación cuartílica neutra ($Q1$, Central, $Q4$), cálculo de la condición socioinstitucional agregada y matriz de estadísticos descriptivos robustos (Media $\pm$ Desv, Mediana, Mín-Máx, IQR, CV% y Asimetría).
+* **Fase 5:** Planificación del repertorio gráfico orientado a la toma de decisiones.
 * **Fase 6 (Visualizaciones Estáticas e Interactivas):**
-  * *Figura 1 (Seaborn):* Histograma y curva KDE con delimitación de cortes empíricos de bienestar.
+  * *Figura 1 (Seaborn):* Distribución empírica y curva KDE con líneas de corte cuartílicas.
   * *Figura 2 (Seaborn):* Brechas promedio ordenadas por magnitud (+0,90 pts en PIB vs +1,09 pts socioinstitucional).
   * *Figura 3 (Seaborn):* Anatomía aditiva acumulada del puntaje medio entre bloques.
-  * *Figura 4 (Seaborn):* Dispersión de bienestar vs. PIB per cápita con detección de atípicos y resiliencias.
-  * *Figura 5 (Plotly):* Mapa coroplético interactivo mundial con escala perceptualmente uniforme.
-  * *Figura 6 (Plotly):* Descomposición aditiva país por país con selector dinámico de segmento.
-* **Fase 7 (Síntesis y Gestalt):** Respuestas a la pregunta analítica y formalización de principios de percepción visual.
-* **Fase 8 (Limitaciones):** Reconocimiento de no causalidad, datos de panel y agregaciones nacionales.
-* **Fase 9 (Anexo IA):** Declaración de transparencia y uso asistido de inteligencia artificial.
+  * *Figura 4 (Seaborn):* Dispersión de bienestar vs. PIB per cápita con detección de atípicos.
+  * *Figura 5 (Plotly):* Mapa coroplético interactivo mundial con escala perceptualmente calibrada.
+  * *Figura 6 (Plotly):* Descomposición aditiva apilada país por país con selector dinámico.
+* **Fases 7–10:** Respuestas empíricas, enlace a la plataforma interactiva oficial, limitaciones y anexo IA.
 
-### 2. Tablero BI Ejecutivo (`exports/EquipoX_Proyecto2_Dashboard.html`)
-Diseñado como un *cockpit* directivo de inteligencia de negocios (conmutación instantánea mediante barra de control superior):
-* **📊 Tablero Ejecutivo (Lectura en Z):** Cuadrícula simétrica 2×2 que guía el escaneo visual en Z:
-  1. *Paso 1 (Top-Left):* KPIs estratégicos y justificación de la regla del 25%.
-  2. *Paso 2 (Top-Right):* Mapa coroplético mundial de calidad de vida.
-  3. *Paso 3 (Diag-Left):* Boxplots de dispersión e IQR con países jittereados y selector de escala.
-  4. *Paso 4 (Diag-Right):* Descomposición de la Gran Brecha (+2,96 pts entre extremos).
-  5. *Paso 5 (Base-Left):* Relación socioinstitucional vs. bienestar ($r = 0,88$, OLS) con países singulares destacados (Costa Rica, Finlandia, Botsuana, Líbano y Afganistán).
-  6. *Paso 6 (Base-Right):* Gráfico de barras apiladas de los 36 países de cada extremo con selector interactivo.
-* **📋 Estadística & Diccionario:** Matriz de estadísticos descriptivos, tarjetas de alerta de dispersión (Corrupción CV = 81,9%) y catálogo de 10 variables con filtros por condición.
-* **💡 Implicaciones Estratégicas:** Respuestas para políticas públicas, panel de cautela inferencial y casos de estudio.
+### 4. Plataforma Interactiva de Inteligencia de Datos (`exports/EquipoX_Proyecto2_Dashboard.html`)
+Diseñada bajo los estándares visuales e institucionales oficiales del *World Happiness Report* y *Gallup Analytics*:
+* **Identidad Institucional:** Paleta oficial (*WHR Magenta* `#E0288A` y *Gallup Green* `#008559`), tipografía técnica (*Inter* y *IBM Plex Mono*) y eliminación de emojis o elementos animados para asegurar máxima sobriedad.
+* **Navegación Multidimensional (Selector de Vistas WHR):**
+  1. **Vista Geoespacial (Map):** Cartografía coroplética interactiva a escala global con codificación continua de la escalera de Cantril (1,7 a 7,8 pts).
+  2. **Vistas Analíticas (Chart):** Cuadrícula comparativa con la descomposición de la brecha (+2,96 pts), diagramas de dispersión e IQR, ajuste econométrico MCO socioinstitucional ($r = 0,88$) y anatomía apilada de los 143 países.
+  3. **Clasificación Integral (Rankings):** Tabla de datos completa de las 143 naciones con ordenamiento dinámico multi-columna, intervalos al 95% y los 7 componentes aditivos.
+  4. **Metodología y Definiciones (Variables & Metodología):** Fichas técnicas de cada indicador, fuentes primarias y formulación del modelo de Distopía.
+* **Filtros Reactivos y Ficha de País:** Buscador con menú predictivo y chips de segmentación cuartílica (*World*, *25% Superior*, *50% Central*, *25% Inferior*) que filtran en tiempo real todas las vistas y despliegan fichas técnicas detalladas (*modal*) para cualquier nación.
 
 ---
 
-## 🔬 Metodología Analítica
+## 🔬 Metodología Analítica: La Gran Brecha (+2,96 pts)
 
-### Criterio de Segmentación por 25% (Cuartiles Empíricos)
-El archivo oficial del *World Happiness Report 2024* contiene únicamente la variable continua de la Escalera de Cantril. Para contrastar de manera reproducible y neutral a los países con **alta** y **baja** evaluación de vida (sin fijar umbrales subjetivos), se ordenaron las 143 naciones y se dividieron en cuartiles empíricos:
-* **25% Superior (Alto Bienestar):** 36 naciones con puntaje $\ge 6,42$ pts (desde Finlandia con 7,74 hasta España y Polonia con 6,44).
-* **50% Central (Bienestar Intermedio):** 71 naciones con puntajes entre 4,73 y 6,41 pts (como Colombia, Brasil, Grecia y Japón).
-* **25% Inferior (Bajo Bienestar):** 36 naciones con puntaje $\le 4,73$ pts (desde Jordania con 4,64 hasta Afganistán con 1,72).
+Para contrastar de forma reproducible y neutral a los países con **alta** y **baja** evaluación de vida (sin umbrales arbitrarios), se dividieron las 143 naciones en cuartiles empíricos:
+* **25% Superior ($Q4$):** 36 naciones con puntaje $\ge 6,42$ pts (desde Finlandia con 7,74 hasta España y Polonia con 6,44). Promedio: **6,88 pts**.
+* **50% Central:** 71 naciones con puntajes entre 4,73 y 6,41 pts (como Colombia con 5,70 pts, Brasil, Grecia y Japón).
+* **25% Inferior ($Q1$):** 36 naciones con puntaje $\le 4,73$ pts (desde Jordania con 4,19 hasta Afganistán con 1,72). Promedio: **3,91 pts**.
 
-### La Gran Brecha (+2,96 pts)
-La separación promedio entre el 25% Superior (6,88 pts) y el 25% Inferior (3,91 pts) es de **+2,96 puntos**. La descomposición demuestra que:
-1. **La Condición Socioinstitucional (+1,09 pts, 36,8% de la brecha):** Sumando apoyo social (+0,67), libertad vital (+0,25) y confianza/probidad (+0,17), supera al impacto del ingreso individual.
-2. **La Condición Económica (+0,90 pts, 30,4% de la brecha):** Constituye la mayor brecha de un componente aislado.
-3. **La Condición de Salud (+0,32 pts, 10,8% de la brecha):** Refleja la disparidad en años de vida saludable.
-4. **Distopía + residuo (+0,65 pts, 22,0% de la brecha):** Componente no modelado que refleja crisis humanitarias y choques idiosincrásicos.
+### Descomposición de la Brecha Promedio:
+$$\Delta_{\text{Total}} = 6,88 - 3,91 = +2,96 \text{ puntos}$$
 
----
-
-## 🎨 Principios de Percepción Gestalt Aplicados
-
-* **Región Común (*Common Region*):** Cada visualización se encuentra encapsulada en una tarjeta `.bi-widget` con bordes nítidos (`#1f2937`) y fondo uniforme (`#111827`), delimitando claramente cada mensaje.
-* **Proximidad (*Proximity*):** Las tarjetas de KPIs están contiguas a la justificación metodológica; los controles de alternancia (dropdowns) residen en el encabezado de cada tarjeta respectiva.
-* **Semejanza Cromática (*Similarity*):** Paleta semántica transversal e idéntica en gráficos estáticos, mapas y barras:
-  * *Económica (PIB):* Azul cian (`#38bdf8`)
-  * *Socioinstitucional (Apoyo, Libertad, Probidad):* Gama cálida ámbar (`#f59e0b`, `#fbbf24`, `#d97706`)
-  * *Salud (Esperanza de vida):* Verde esmeralda (`#10b981`)
-  * *Referencia (Generosidad y Residuo):* Gris neutro y lavanda (`#94a3b8`, `#818cf8`)
-  * *Extremos:* 25% Superior en cian (`#38bdf8`) frente a 25% Inferior en carmesí (`#f43f5e`).
-* **Simetría y Orden (*Symmetry & Prägnanz*):** Rejilla balanceada de dos columnas pares con alturas uniformes (430 px en filas superiores, 520 px en la fila inferior).
-* **Continuidad (*Continuity*) y Lectura en Z:** Trayectoria visual planificada para análisis directivo (Top-Left $\rightarrow$ Top-Right $\searrow$ Diag-Left $\rightarrow$ Diag-Right $\searrow$ Base-Left $\rightarrow$ Base-Right).
-* **Figura-Fondo (*Figure-Ground*):** Contraste calibrado entre un fondo oscuro inmersivo (`#0b0f19`) y visualizaciones luminosas, evitando la fatiga visual.
+| Factor / Condición | Brecha Absoluta | % Brecha Total | Impacto Estandarizado ($z$) | Hallazgo Clave |
+| :--- | :---: | :---: | :---: | :--- |
+| **Condición Socioinstitucional** (Apoyo + Libertad + Probidad) | **+1,09 pts** | **36,8 %** | **3,5 $z$** | Factor colectivo más diferenciador; correlación $r = 0,88$ con la evaluación de vida. |
+| **Condición Económica** (PIB per cápita logarítmico) | **+0,90 pts** | **30,4 %** | **3,9 $z$** | Mayor brecha individual; base indispensable para financiar servicios de bienestar. |
+| **Condición de Salud** (Esperanza de vida saludable) | **+0,32 pts** | **10,8 %** | **3,2 $z$** | Brecha biológica acumulativa entre sistemas sanitarios avanzados y frágiles. |
+| **Distopía + residuo** (Crisis, conflicto y choque no modelado) | **+0,65 pts** | **22,0 %** | --- | Residuos fuertemente negativos en naciones colapsadas (Líbano $-2,80$, Afganistán $-2,05$). |
+| **Generosidad** (Donaciones caritativas) | **+0,02 pts** | **0,7 %** | **0,2 $z$** | No discrimina el nivel de bienestar agregado de las naciones. |
 
 ---
 
@@ -116,21 +125,32 @@ cd Proyecto-2-Visualizacion
 ```
 
 ### 2. Configurar entorno de Python
-Se recomienda Python 3.10 o superior.
+Se requiere Python 3.10 o superior:
 ```bash
 pip install pandas numpy matplotlib seaborn plotly openpyxl nbformat nbclient
 ```
 
 ### 3. Ejecutar el Cuaderno Principal
-Para ejecutar el cuaderno completo y regenerar las salidas:
+El cuaderno se ejecuta de principio a fin de manera 100% desatendida:
 ```bash
-python -c "import nbformat; from nbclient import NotebookClient; nb = nbformat.read('notebooks/EquipoX_Proyecto2_Visualizacion.ipynb', as_version=4); client = NotebookClient(nb, timeout=600); client.execute(); nbformat.write(nb, 'notebooks/EquipoX_Proyecto2_Visualizacion.ipynb'); print('[OK] Notebook ejecutado con éxito')"
+python -c "import nbformat; from nbclient import NotebookClient; nb = nbformat.read('notebooks/EquipoX_Proyecto2_Visualizacion.ipynb', as_version=4); client = NotebookClient(nb, timeout=600); client.execute(); nbformat.write(nb, 'notebooks/EquipoX_Proyecto2_Visualizacion.ipynb'); print('[OK] Notebook ejecutado con exito')"
 ```
 
-### 4. Generar o Visualizar el Tablero BI
-Para compilar directamente el tablero HTML:
+### 4. Compilar los Documentos en PDF (LaTeX)
+El repositorio incluye el motor ejecutable autónomo `tectonic.exe` en `bin/`, por lo que **no se requiere instalar MiKTeX ni TeX Live**:
+* Para compilar el informe técnico maestro:
+  ```bash
+  python docs/fase1_audiencia_pregunta/compilar.py
+  ```
+* Para compilar el resumen ejecutivo de 3 páginas:
+  ```bash
+  python docs/entregables/compilar.py
+  ```
+
+### 5. Generar o Visualizar el Portal Interactivo
+Para compilar y exportar el tablero interactivo HTML:
 ```bash
 python create_storytelling_dashboard.py
 ```
-El archivo resultante puede abrirse en cualquier navegador web moderno:
+El archivo se abre en cualquier navegador web moderno:
 `exports/EquipoX_Proyecto2_Dashboard.html`
